@@ -1,17 +1,44 @@
-(setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-                         ("marmalade" . "https://marmalade-repo.org/packages/")
-                         ("melpa" . "https://melpa.org/packages/")))
-
-
+; theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/moe-theme.el/")
 (add-to-list 'load-path "~/.emacs.d/moe-theme.el/")
-(require 'moe-theme)
+(add-to-list 'load-path "~/.emacs.d/emmet-mode.el/")
 
+; package list
+(add-to-list 'load-path "~/.emacs.d/package.el/")
+
+
+; stuff I don't understand from MELPA
 (require 'package)
+(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
+                    (not (gnutls-available-p))))
+       (proto (if no-ssl "http" "https")))
+  (when no-ssl
+    (warn "\
+Your version of Emacs does not support SSL connections,
+which is unsafe because it allows man-in-the-middle attacks.
+There are two things you can do about this warning:
+1. Install an Emacs version that does support SSL and be safe.
+2. Remove this warning from your init file so you won't see it again."))
+  ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
+  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
+  ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
+  (when (< emacs-major-version 24)
+    ;; For important compatibility libraries like cl-lib
+    (add-to-list 'package-archives (cons "gnu" (concat proto "://elpa.gnu.org/packages/")))))
 (package-initialize)
+      
+(add-hook 'python-mode-hook 'jedi:setup)
 
+; folders to be required
+(require 'moe-theme)
+(require 'package)
 (require 'evil)
+
+; functionalities
 (evil-mode 1)
+(auto-complete-mode 1)
+(ido-mode 1)
+(package-initialize)
 
 ;; edit emacs appearance
 (tool-bar-mode -1)
@@ -23,16 +50,15 @@
 (global-nlinum-mode)
 (set-default 'cursor-type 'bar)
 
-;; set your lisp system and, optionally, some contribs
+; lisp environment
 (setq inferior-lisp-program "/usr/bin/sbcl")
 (setq slime-contribs '(slime-fancy))
 
 ;; edit fonting
-(add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-8"))
-(set-face-attribute 'default t :font "DejaVu Sans Mono-8")
-
-(set-face-attribute 'default nil :font "DejaVu Sans Mono-8")
-(set-frame-font "DejaVu Sans Mono-8" nil t)
+(add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-9"))
+(set-face-attribute 'default t :font "DejaVu Sans Mono-9")
+(set-face-attribute 'default nil :font "DejaVu Sans Mono-9")
+(set-frame-font "DejaVu Sans Mono-9" nil t)
 
 ;; custom set variables
 (custom-set-variables
@@ -59,6 +85,9 @@
      ("#3C3D37" . 100))))
  '(initial-buffer-choice "~/")
  '(magit-diff-use-overlays nil)
+ '(package-selected-packages
+   (quote
+    (undo-tree tablist macrostep s deferred python-environment epl pkg-info popup let-alist nlinum concurrent ctable epc jedi-core async helm-core helm helm-make goto-chg jedi auto-complete python-mode python-django django-mode list-packages-ext web-mode soothe-theme slime restart-emacs projectile pdf-tools multi monokai-theme font-lock+ evil emmet-mode abyss-theme)))
  '(pos-tip-background-color "#FFFACE")
  '(pos-tip-foreground-color "#272822")
  '(vc-annotate-background nil)
@@ -92,3 +121,4 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
