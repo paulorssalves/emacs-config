@@ -1,8 +1,8 @@
-(defun instpkgs (pkg)
-  (while pkg
-    (if (not (require (car pkg) nil 'noerror))
-	(package-install (car pkg)) (setq pkg (cdr pkg))
-	(setq pkg(cdr pkg)))))
+(defun instpkg-lists (pkg-list)
+  (while pkg-list
+    (if (not (require (car pkg-list) nil 'noerror))
+	(package-install (car pkg-list)) (setq pkg-list (cdr pkg-list))
+	(setq pkg-list(cdr pkg-list)))))
 
 (defun delpkgs (pkg-list)
     (dolist (pkg pkg-list)
