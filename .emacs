@@ -53,7 +53,7 @@
 ;; setting themes and linum colors
 (setq linum-format " %d ")
 (setq curr_time (string-to-number (format-time-string "%H")))
-(cond ((< curr_time 7) ((lambda (load-theme 'abyss)
+(cond ((< curr_time 7) ((lambda () (load-theme 'abyss)
 			  (set-face-foreground 'linum "#303030")
 			  (set-face-background 'linum "#000000"))))
       ((and (> curr_time 6) (<= curr_time 17))  ((lambda () (load-theme 'spacemacs-light)
