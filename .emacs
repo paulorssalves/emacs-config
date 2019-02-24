@@ -23,7 +23,6 @@
 (require 'helm-config)
 (require 'evil)
 
-
 ;; setting modes
 (evil-mode 1)
 (auto-complete-mode 1)
