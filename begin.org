@@ -1,0 +1,13 @@
+* [[file:/home/paulo/.emacs.d/config.org][config]]
+** [[file:/home/paulo/.emacs][.emacs]]
+* [[file:/home/paulo/Documents/projs][Prog. lang. proj.]]
+* [[file:/home/paulo/Dropbox/org/resources.org][Resources]]
+* [[file:/home/paulo/Dropbox/org/todos.org][to-dos]]
+  
+(setq current-packages 
+'(markdown-mode evil goto-chg helm helm-core async 
+jedi auto-complete jedi-core epc ctable concurrent 
+noflet org-babel-eval-in-repl ess julia-mode matlab-mode 
+eval-in-repl ace-window avy dash org-bullets paredit popup 
+python-environment deferred restart-emacs smart-mode-line 
+rich-minority undo-tree web-mode))

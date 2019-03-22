@@ -1,3 +1,0 @@
-* Learning C/C++
-** keep studying cpp classes/OOP system on learncpp.com
-** do the challenge on linkedlist.c 
