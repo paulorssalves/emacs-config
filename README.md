@@ -11,5 +11,5 @@ Para que funcione integralmente é necessário apontar os endereços de cada arq
 
 ```emacs-lisp 
 (setq current-packages 
-	'(evil-magit magit solarized-theme visual-fill-column org-gcal org-caldav oauth2 oauth impatient-mode simple-httpd jedi ranger ox-twbs use-package auctex smart-mode-line-powerline-theme powerline latex-preview-pane latex-extra pdf-tools emmet-mode markdown-mode org-babel-eval-in-repl evil))
+	'(evil-magit magit solarized-theme visual-fill-column org-gcal org-caldav oauth2 oauth impatient-mode simple-httpd jedi ranger ox-twbs use-package auctex smart-mode-line-powerline-theme powerline latex-preview-pane latex-extra pdf-tools emmet-mode markdown-mode org-babel-eval-in-repl evil auto-complete jedi-core eval-in-repl org-bullets paredit restart-emacs undo-tree web-mode))
 ```
