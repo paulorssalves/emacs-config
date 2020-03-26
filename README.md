@@ -11,10 +11,5 @@ Para que funcione integralmente é necessário apontar os endereços de cada arq
 
 ```emacs-lisp 
 (setq current-packages 
-	'(markdown-mode evil goto-chg helm helm-core async 
-	jedi auto-complete jedi-core epc ctable concurrent 
-	noflet org-babel-eval-in-repl ess julia-mode matlab-mode 
-	eval-in-repl ace-window avy dash org-bullets paredit popup 
-	python-environment deferred restart-emacs smart-mode-line 
-	rich-minority undo-tree web-mode))
+	'(evil-magit magit solarized-theme visual-fill-column org-gcal org-caldav oauth2 oauth impatient-mode simple-httpd jedi ranger ox-twbs use-package auctex smart-mode-line-powerline-theme powerline latex-preview-pane latex-extra pdf-tools emmet-mode markdown-mode org-babel-eval-in-repl evil))
 ```

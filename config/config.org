@@ -1,0 +1,332 @@
+* Infrastructure
+#+BEGIN_SRC emacs-lisp
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+(package-initialize)
+
+(cond
+ ((string-equal "windows-nt" system-type)
+  (progn
+    (setq initial-buffer-choice (format "c:/Users/%s/OneDrive/Documentos/emacs/begin.org" user-login-name))
+    (setq package-check-signature nil)
+    ;; setting proper fonts for windows
+    (add-to-list 'default-frame-alist '(font . "Lucida Console-12"))  
+    (set-face-attribute 'default t :font "Lucida Console-12")  
+    (set-face-attribute 'default nil :font "Lucida Console-12")  
+    (set-frame-font "Lucida Console-12" nil t))) 
+ ((string-equal "gnu/linux" system-type)
+  (progn
+    (setq initial-buffer-choice "~/.begin.org") ;; setting proper fonts for linux 
+    (add-to-list 'default-frame-alist '(font . "Monospace-13"))  
+    (set-face-attribute 'default t :font "Monospace-13")  
+    (set-face-attribute 'default nil :font "Monospace-13")  
+    (set-frame-font "Monospace-13" nil t))))
+
+(add-to-list 'load-path "~/.emacs.d/lisp")
+(require 'helm-config)
+(evil-mode 1)
+(require 'evil-magit) 
+(visual-line-mode)
+#+END_SRC
+** Working around gnu elpa bugs
+#+BEGIN_SRC emacs-lisp
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+(setq package-check-signature nil) 
+#+END_SRC
+* Appearance
+  
+#+BEGIN_SRC emacs-lisp 
+ (setq hour (string-to-number (format-time-string "%H")))
+ (cond ((and (< hour 5) (>= hour 0)) (load-theme 'solarized-gruvbox-dark t))
+	   ((and (>= hour 5) (<= hour 18)) (load-theme 'solarized-light t))
+	   ((and (>= hour 19) (<= hour 23)) (load-theme 'solarized-gruvbox-dark t)))
+ (setq sml/no-confirm-load-theme t)
+ (sml/setup)
+;(hl-line-mode 1)
+(set-frame-parameter (selected-frame) 'alpha '(100 . 100))
+
+
+
+(global-linum-mode)
+(hl-line-mode 1)
+(fringe-mode 0)
+(setq linum-format " %d  ")
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
+(show-paren-mode 1)
+
+#+END_SRC
+
+* Markup
+** Org mode
+*** Geral
+ #+BEGIN_SRC emacs-lisp  
+
+   (require 'ob-lilypond)
+   (require 'zen-mode)
+   (require 'org-mouse)
+
+   (setq org-todo-keywords '((sequence "TODO(t)" "FAIL(f)" "|" "+REP(r)" "DONE(d)")))
+   (setq org-todo-keyword-faces
+	 '(("TODO". "#ffbe57")
+	   ("+REP" . "#34a1eb")
+	   ("FAIL" . org-warning)
+	   ("DONE" . "green")))
+
+    (require 'org-bullets)
+    (add-hook 'org-mode-hook (progn (lambda  ()
+				      "Word wrapping enabled"
+				      (org-bullets-mode 1)
+				      (setq truncate-lines nil))))
+
+ #+END_SRC
+*** Tags 
+  #+BEGIN_SRC emacs-lisp 
+    (add-to-list 'org-file-apps '(directory . emacs))
+    (setq org-tag-alist
+	    ;;; org tags for to-do lists
+	  '(("home" . ?1)
+	    ("rua" . ?r)
+	    ("computador" . ?c)
+	    ("caderno" . ?C)
+	    ("urgent" . ?3)
+	    ("Inglês" . ?6)
+	    ("Flauta" . ?f)
+	    ("UERJ" . ?u)
+	    ("work" . ?w)
+	    ("cellphone" . ?7)
+	    ("programming" . ?p)
+	    ("emacs" . ?e)))
+    #+END_SRC
+*** Publish
+    #+BEGIN_SRC emacs-lisp
+    (require 'ox-twbs)
+    #+END_SRC
+*** Agenda
+      #+BEGIN_SRC emacs-lisp
+	(require 'org-habit)
+	(add-to-list 'org-modules 'org-habits)
+	(setq org-habit-graph-column 100) 
+	(org-gcal-sync)
+
+	(setq syncdir "/media/paulo/HDD_1/syncthing/org/")
+	(setq confdir "/home/paulo/.emacs.d/config/")
+
+	(setq agenda-files (list
+			    (concat syncdir "todos.org")
+			    (concat syncdir "habits.org")
+			    (concat syncdir "gcalendar.org")))
+
+	(add-hook 'after-init-hook (lambda ()
+				     (progn 
+				       (org-babel-load-file (concat confdir "org-agenda-config.org"))
+				       (setq org-agenda-files agenda-files)
+				       ;;; refile
+				       (setq agenda-minus-ical (butlast org-agenda-files))
+				       (setq projetos (concat syncdir "projetos.org"))
+				       (setq org-refile-targets '((nil :maxlevel . 1)
+								  (agenda-minus-ical :maxlevel . 1)
+								  (projetos :maxlevel . 1))))))
+	;;; load a config file to give org-agenda vim keybindings
+	(global-set-key '[f1] 'org-agenda-list)
+
+ #+END_SRC
+*** Calendar
+
+#+BEGIN_SRC emacs-lisp
+  (require 'org-gcal)
+  (setq org-gcal-client-id "HA! YOU'LL HAVE TO DO"
+	org-gcal-client-secret "BETTER THAN THAT LITTLE BROTHER"
+	'(("pauloroberto.21s@gmail.com" . "/media/paulo/HDD_1/syncthing/org/gcalendar.org")))
+#+END_SRC
+*** Org capture 
+  #+BEGIN_SRC emacs-lisp 
+  (require 'org-capture)
+  (require 'noflet)
+  (setq inhibit-compacting-font-caches t)
+  (defun make-capture-frame ()
+    "Create a new frame and run org-capture."
+    (interactive)
+    (make-frame '((name . "capture")))
+    (select-frame-by-name "capture")
+    (delete-other-windows)
+    (noflet ((switch-to-buffer-other-window (buf) (switch-to-buffer buf)))
+      (org-capture)))
+      
+    (global-set-key (kbd "M-f") 'other-frame)
+;    (global-set-key (kbd "<f6>") 'make-capture-frame)
+    (global-set-key (kbd "<f6>") 'org-capture)
+
+  #+END_SRC
+**** Books and Articles
+     #+BEGIN_SRC emacs-lisp
+       ;;; book notes
+       (setq notesdir "/media/paulo/HDD_1/syncthing/org/notes.org") 
+       (add-to-list 'org-capture-templates
+		    '("n" "Note about a book" entry
+		      (file+olp notesdir "Capture" "Book notes") 
+		      "* %t \n:PROPERTIES:\n:LIVRO: %^{Livro}\n:PAGES: %^{Páginas}\n:END:"
+		      :empty-lines 1 :jump-to-captured t))
+
+	;;; articles
+       (add-to-list 'org-capture-templates
+		    '("a" "Note about an article" entry
+		      (file+olp notesdir "Capture" "Articles") 
+		      "* %t \n:PROPERTIES:\n:AUTHOR: %^{Author}\n:TITLE: %^{Title}\n:YEAR: %^{Year}\n:END:\n%?"
+		      :empty-lines 1 :jump-to-captured t))
+       ;;; books
+       (add-to-list 'org-capture-templates
+		    '("b" "Books to read" entry
+		      (file+olp notesdir "Capture" "Books") 
+		      "*%^{Book title} %? \n:PROPERTIES:\n:AUTHOR: %^{Author}\n:END:" :empty-lines 1))
+     #+END_SRC
+**** Todos
+     #+BEGIN_SRC emacs-lisp 
+       (setq tasksdir "/media/paulo/HDD_1/syncthing/org/todos.org")
+       (add-to-list 'org-capture-templates
+		    '("t" "Task / To-do" entry
+		      (file+headline tasksdir "Capture") 
+		      "* TODO %^{Description}\n%?" :empty-lines 1 :jump-to-captured t))
+     #+END_SRC
+**** Goals 
+     #+BEGIN_SRC emacs-lisp
+       (setq goalsdir "/media/paulo/HDD_1/syncthing/org/projetos.org")
+       (add-to-list 'org-capture-templates
+		    '("g" "Goal / Project" entry
+		      (file+headline goalsdir "Capture") 
+		      "* %^{Title}\n:PROPERTIES:\n:GOAL: %^{Goal|Medium|Short|Long}\n:END:\nRecorded on %t\n:SMART:\n:SPECIFIC: %^{Specific description}\n:MEASURABLE: %^{How to measure progress in that goal?\n:ACTIVITY: %^{What activity needs to be done to accomplish that goal?}\n:RESOURCES: %^{What do we need to do it? Do we already have it?}\n:TIMEBOX: %^{How much time should I give to this task, and how often?}\n:END:\n:ACTIONS:\nLinks to actions that support this goal\n:END:\n" :empty-lines 1))
+
+     #+END_SRC
+**** Journal entries
+     #+BEGIN_SRC emacs-lisp 
+       (setq journaldir "/media/paulo/HDD_1/syncthing/org/journaling.org")
+	(add-to-list 'org-capture-templates
+		     '("j" "Journal entry" entry
+		       (file+headline journaldir "Capture") 
+		       "* %t - %^{Title}\n:LOGBOOK:\n%?:END:"
+		       :empty-lines 1 :jump-to-captured t))
+ 
+     #+END_SRC
+** Markdown
+   #+BEGIN_SRC emacs-lisp
+   (setq markdown-open-command "/usr/bin/grip")
+   #+END_SRC
+** TeX 
+   #+BEGIN_SRC emacs-lisp
+   (add-to-list 'load-path "~/.emacs.d/lisp/auctex-12.2")
+   (load "auctex.el" nil t t)
+   (load "preview-latex.el" nil t t)
+   
+   
+   ;; compile to pdf automatically
+   (setq TeX-PDF-mode t)
+   (setq TeX-command-force "LaTeX")
+   
+   ;; set zathura as my main tex output
+   (setq TeX-view-program-selection
+	'((output-dvi "Atril")
+	  (output-pdf "Atril")
+	  (output-html "Firefox")))
+   #+END_SRC
+
+* Mode hooks
+#+BEGIN_SRC emacs-lisp
+
+  (add-hook 'dired-mode-hook 'dired-hide-details-mode)
+
+  (defun my-python-hooks ()
+    (hl-line-mode 1)
+    (jedi:setup))
+
+  (add-hook 'python-mode-hook 'my-python-hooks) 
+
+  (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
+  (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
+  (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
+  (add-hook 'ielm-mode-hook #'enable-paredit-mode)
+  (add-hook 'lisp-mode-hook #'enable-paredit-mode)
+  (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
+
+  (require 'web-mode)
+     (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+     (add-hook 'web-mode-hook (lambda () (emmet-mode 1)))
+
+
+  ;; c and c++
+  (defun c_hook ()
+    ;; enable irony mode (which I haven't quite learned yet) and automatic curly brackets setting
+     (electric-pair-mode 1)
+     (irony-mode 1))
+
+  (add-hook 'c++-mode-hook 'c_hook) 
+  (add-hook 'c-mode-hook 'c_hook)
+
+  ;; java
+  (add-hook 'java-mode-hook (lambda ()
+			      (electric-pair-mode 1)))
+
+
+#+END_SRC
+
+* extension functions 
+#+BEGIN_SRC emacs-lisp 
+
+(defun replace-last-sexp ()
+  (interactive)
+  (let ((value (eval (preceding-sexp))))
+    (kill-sexp -1)
+    (insert (format "%S" value))))
+
+(defun installed? (pkg)
+  ;;; checks if PKG is installed. Returns t if it is, nil otherwise.
+  (if (eq (require pkg nil 'noerror) pkg) 't nil))
+
+(defun install-multiple (pkg-list)
+  ;;; install multiple packages at once
+  (cond ((consp pkg-list) ;; if pkg-list is a cons  
+	 (while pkg-list
+	   (if (not (installed? (car pkg-list)))
+	       (progn
+		 (package-install (car pkg-list))
+		 (setq pkg-list (cdr pkg-list)))
+	     (setq pkg-list (cdr pkg-list )))))
+	((symbolp pkg-list) ;; if pkg-list is actually a single package
+	 (if (not (installed? pkg-list))
+	   (package-install pkg-list)))
+	('t ;; else return an error message
+	 (message "You should input a list of packages or a single quoted package"))))
+
+(defun apackage (pkg)
+  ;;; returns actual package as it's found in package-alist 
+  (car (cdr (assoc pkg package-alist))))
+
+(defun delete-multiple (pkg-list)
+  ;;; delete multiple packages at once
+  (cond ((symbolp pkg-list)
+	 (if (installed? pkg-list)
+	     (package-delete (apackage pkg-list))
+	   nil))
+	 ((consp pkg-list)
+	  (while pkg-list
+	    (if (installed? (car pkg-list))
+		(progn
+		  (package-delete
+		   (apackage (car pkg-list)))
+		  (setq pkg-list (cdr pkg-list)))
+	      (setq pkg-list (cdr pkg-list)))))
+	 ('t nil)))
+
+(global-set-key (kbd "M-r") 'replace-last-sexp)
+;    (define-key tern-mode-keymap (kbd "M-.") nil)
+;    (define-key tern-mode-keymap (kbd "M-,") nil)
+
+
+#+END_SRC
+
+* Status report
+#+BEGIN_SRC emacs-lisp 
+(defun display-startup-echo-area-message ()
+  (message (format "hi, %s! Everything is working as expected. Good to see you." user-login-name)))
+
+#+END_SRC

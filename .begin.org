@@ -1,0 +1,30 @@
+
+#+TITLE: Fulcrum
+#+AUTHOR: Paulo
+
+* GTD
+  :PROPERTIES:
+  :VISIBILITY: content
+  :END: 
+** [[file://media/paulo/HDD_1/syncthing/org/todos.org][Afazeres]]
+** [[file://media/paulo/HDD_1/syncthing/org/habits.org][Tarefas Diárias]]
+** [[file://media/paulo/HDD_1/syncthing/org/projetos.org][Projetos]]
+** [[file://media/paulo/HDD_1/syncthing/org/notes.org][Notas]] 
+
+* Configurações 
+  :PROPERTIES:
+  :VISIBILITY: content
+  :END:
+** [[file://home/paulo/.emacs.d/config/config.org][config.org]]
+** [[file://home/paulo/.emacs.d/config/config.el][config.el]]
+
+* Diretórios
+  :PROPERTIES:
+  :VISIBILITY: content
+  :END:
+** [[file://media/paulo/HDD_CREATIVE_FILES/src][src]]
+** [[file://home/paulo/Documents/historias][histórias]]
+** [[file://home/paulo/Documents/academics][Faculdade]]
+** [[file://media/paulo/HDD_1/syncthing/org][org-folder]]
+** [[file://~/][homedir~]] 
+    
