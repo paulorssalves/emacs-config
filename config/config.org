@@ -38,8 +38,8 @@
 #+BEGIN_SRC emacs-lisp 
  (setq hour (string-to-number (format-time-string "%H")))
  (cond ((and (< hour 5) (>= hour 0)) (load-theme 'solarized-gruvbox-dark t))
-	   ((and (>= hour 5) (<= hour 18)) (load-theme 'solarized-light t))
-	   ((and (>= hour 19) (<= hour 23)) (load-theme 'solarized-gruvbox-dark t)))
+	   ((and (>= hour 5) (<= hour 17)) (load-theme 'solarized-light t))
+	   ((and (>= hour 18) (<= hour 23)) (load-theme 'solarized-gruvbox-dark t)))
  (setq sml/no-confirm-load-theme t)
  (sml/setup)
 ;(hl-line-mode 1)
@@ -80,6 +80,25 @@
 				      (org-bullets-mode 1)
 				      (setq truncate-lines nil))))
 
+    (setq org-directory "/media/paulo/HDD_1/Dropbox/org")
+    (setq org-default-notes-file (concat org-directory "/notes.org"))
+
+    (defun my/copy-id-to-clipboard() "Copy the ID property value to killring,
+if no ID is there then create a new unique ID. 
+This function works only in org-mode buffers.
+ 
+The purpose of this function is to easily construct id:-links to 
+org-mode items. If its assigned to a key it saves you marking the
+text and copying to the killring."
+       (interactive)
+       (when (eq major-mode 'org-mode) ; do this only in org-mode buffers
+	 (setq mytmpid (funcall 'org-id-get-create))
+	 (kill-new mytmpid)
+	 (message "Copied %s to killring (clipboard)" mytmpid)
+       ))
+ 
+(global-set-key (kbd "<f3>") 'my/copy-id-to-clipboard)
+(global-set-key (kbd "C-c s") 'org-sort)
  #+END_SRC
 *** Tags 
   #+BEGIN_SRC emacs-lisp 
@@ -89,8 +108,9 @@
 	  '(("home" . ?1)
 	    ("rua" . ?r)
 	    ("computador" . ?c)
+	    ("PHONE" . ?P)
 	    ("caderno" . ?C)
-	    ("urgent" . ?3)
+	    ("URGENT" . ?3)
 	    ("Inglês" . ?6)
 	    ("Flauta" . ?f)
 	    ("UERJ" . ?u)
@@ -106,7 +126,6 @@
 *** Agenda
       #+BEGIN_SRC emacs-lisp
 	(require 'org-habit)
-	(add-to-list 'org-modules 'org-habits)
 	(setq org-habit-graph-column 100) 
 	(org-gcal-sync)
 
@@ -130,14 +149,15 @@
 								  (projetos :maxlevel . 1))))))
 	;;; load a config file to give org-agenda vim keybindings
 	(global-set-key '[f1] 'org-agenda-list)
+	(global-set-key (kbd "C-c a") 'org-agenda)
 
  #+END_SRC
 *** Calendar
 
 #+BEGIN_SRC emacs-lisp
   (require 'org-gcal)
-  (setq org-gcal-client-id "HA! YOU'LL HAVE TO DO"
-	org-gcal-client-secret "BETTER THAN THAT LITTLE BROTHER"
+  (setq org-gcal-client-id ""
+	org-gcal-client-secret ""
 	'(("pauloroberto.21s@gmail.com" . "/media/paulo/HDD_1/syncthing/org/gcalendar.org")))
 #+END_SRC
 *** Org capture 
@@ -173,21 +193,37 @@
        (add-to-list 'org-capture-templates
 		    '("a" "Note about an article" entry
 		      (file+olp notesdir "Capture" "Articles") 
-		      "* %t \n:PROPERTIES:\n:AUTHOR: %^{Author}\n:TITLE: %^{Title}\n:YEAR: %^{Year}\n:END:\n%?"
+		      "* %t %^{Title} \n:PROPERTIES:\n:AUTHOR: %^{Author}\n:YEAR: %^{Year}\n:END:\n%?"
 		      :empty-lines 1 :jump-to-captured t))
-       ;;; books
+     #+END_SRC
+**** Lists 
+     #+BEGIN_SRC emacs-lisp 
+     ;;; books
+       (setq listsdir "/media/paulo/HDD_1/syncthing/org/lists.org") 
        (add-to-list 'org-capture-templates
 		    '("b" "Books to read" entry
-		      (file+olp notesdir "Capture" "Books") 
-		      "*%^{Book title} %? \n:PROPERTIES:\n:AUTHOR: %^{Author}\n:END:" :empty-lines 1))
-     #+END_SRC
+		      (file+olp listsdir "Capture" "Books") 
+		      "* %^{Book title} %?\n Added: %t\n:INFO:\n:AUTHOR: %^{Author}\n:END:" :empty-lines 1))
+
+		      ;;; movies
+       (add-to-list 'org-capture-templates
+		    '("m" "Movies/series to watch" entry
+		      (file+olp listsdir "Capture" "Movies/series") 
+		      "* %^{Movie title} %^{Kind of media|:movie:|:series:|:animu:} %?\n Added: %t" :empty-lines 1))
+
+		      ;;; games
+       (add-to-list 'org-capture-templates
+		    '("g" "Games to play" entry
+		      (file+olp listsdir "Capture" "Games") 
+		      "* %^{Game title} %?\n Added: %t" :empty-lines 1))
+     #+END_SRC 
 **** Todos
      #+BEGIN_SRC emacs-lisp 
        (setq tasksdir "/media/paulo/HDD_1/syncthing/org/todos.org")
        (add-to-list 'org-capture-templates
 		    '("t" "Task / To-do" entry
-		      (file+headline tasksdir "Capture") 
-		      "* TODO %^{Description}\n%?" :empty-lines 1 :jump-to-captured t))
+		      (file+headline tasksdir "Afazeres") 
+		      "* TODO %^{Description}\n%?" :empty-lines 1))
      #+END_SRC
 **** Goals 
      #+BEGIN_SRC emacs-lisp

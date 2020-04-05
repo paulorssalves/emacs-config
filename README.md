@@ -10,6 +10,5 @@ Para que funcione integralmente é necessário apontar os endereços de cada arq
 (podem ser instalados de uma só vez usando a função 'install-multiple', definida em "config.org"
 
 ```emacs-lisp 
-(setq current-packages 
-	'(evil-magit magit solarized-theme visual-fill-column org-gcal org-caldav oauth2 oauth impatient-mode simple-httpd jedi ranger ox-twbs use-package auctex smart-mode-line-powerline-theme powerline latex-preview-pane latex-extra pdf-tools emmet-mode markdown-mode org-babel-eval-in-repl evil auto-complete jedi-core eval-in-repl org-bullets paredit restart-emacs undo-tree web-mode))
+(setq dependencies '(dracula-theme emmet-mode evil-magit evil goto-chg helm helm-core dash-functional impatient-mode htmlize jedi auto-complete jedi-core epc ctable concurrent latex-preview-pane magit git-commit markdown-mode noflet oauth2 org-babel-eval-in-repl ess eval-in-repl ace-window avy org-bullets org-gcal alert log4e gntp orgbox ox-gfm ox-twbs paredit popup python-environment ranger request-deferred request deferred restart-emacs s simple-httpd rich-minority solarized-theme dash tablist transient undo-tree visual-fill-column web-mode with-editor async all-the-icons memoize))
 ```
