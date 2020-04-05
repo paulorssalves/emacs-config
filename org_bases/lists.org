@@ -1,0 +1,22 @@
+
+#+TAGS: { movie(m) series(s) } animu(a) manga(n) horror(r) history(o) 
+#+TAGS: comedy(c) romance(m) rpg(g) religion(l) philosophy(p) psychology(y) 
+#+TITLE: Lists
+#+AUTHOR: Paulo
+
+* Capture
+** Books 
+** Games 
+** Movies/series
+*** Anjo exterminador :movie: 
+   Added: <2020-03-29 Sun>
+
+* Games to play
+  :PROPERTIES:
+  :ARCHIVE:  lists.org_archive::* Games played
+  :END:
+** Buy: 
+* Books to read
+  :PROPERTIES:
+  :ARCHIVE: lists.org_archive::* Read books
+  :END:

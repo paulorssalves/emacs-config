@@ -1,0 +1,27 @@
+
+#+TITLE: Agenda 
+#+AUTHOR: Paulo
+#+SEQ_TODO: TODO(t) FAIL(f) PROJ(p) WAIT(w) | +REP(r) DONE(d)
+#+TAGS: [ CONTEXTO : CASA(1) TRABALHO(5) CELULAR(7) PAPEL(2) HOBBY(h) URGENT(U) IMPORTANT(I) ]
+#+TAGS: [ CASA : COMPUTADOR(3) FLAUTA(f) ]
+#+TAGS: [ COMPUTADOR : EMACS(e) PROGRAMMING(p) ]
+#+TAGS: [ FACULDADE : UERJ(u) LAB_RELACOES(l) SPA(S) ]
+#+TAGS: [ INGLÊS : CNA(w) ] 
+
+* Trabalho 
+
+* Afazeres  
+  :PROPERTIES:
+  :ARCHIVE:  todos.org_archive::* Afazeres gerais
+  :END:
+
+* TODO Revisão semanal
+  SCHEDULED: <2020-04-12 Sun +7d>
+* Tarefas pessoais
+  :PROPERTIES:
+  :ARCHIVE:  todos.org_archive::* Tarefas pessoais
+  :END:
+
+* Pessoas 
+* Faculdade / Psicologia
+* Financeiro 

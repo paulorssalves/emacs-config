@@ -1,0 +1,17 @@
+
+#+TITLE: Projetos e Objetivos
+#+AUTHOR: Paulo
+#+PROPERTY: Goal_ALL Short Medium Long
+#+COLUMNS: %58ITEM(Details) %TAGS(Context) %7TODO(To Do) %7Goal(Goal)
+#+SEQ_TODO: TODO(t) SOMEDAY(s) HOLD(h) | ENGAGED(e) DONE(d) CANCELLED(c) 
+
+* Capture
+
+* TODO Angariar recursos a respeito da vida Unabomber até Junho
+  :PROPERTIES:
+  :Goal:     Medium
+  :END:
+* Aprender
+* Leituras
+* Fazer Vídeos 
+    
