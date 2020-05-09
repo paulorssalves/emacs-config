@@ -1,0 +1,7 @@
+#+TITLE: Trabalho de Conclusão de Curso de Psicologia
+#+AUTHOR: Paulo Roberto Soares da Silva Alves
+#+OPTIONS: date:nil
+
+* TODO Tópicos a serem trabalhados 
+* Trabalho de Conclusão de Curso 
+** <2020-05-08 Fri> - No princípio era a aćão

@@ -1,11 +1,17 @@
 
 #+TAGS: { movie(m) series(s) } animu(a) manga(n) horror(r) history(o) 
 #+TAGS: comedy(c) romance(m) rpg(g) religion(l) philosophy(p) psychology(y) 
+#+TAGS: stats(S) programming(P) 
 #+TITLE: Lists
 #+AUTHOR: Paulo
+#+OPTIONS: p:nil todo:nil \n:t date:nil c:nil prop:nil stat:nil tags:nil d:nil
+
+* [[./refs.org][referências]]
 
 * Capture
 ** Books 
+** Artigos 
+** Stats 
 ** Games 
 ** Movies/series
 *** Anjo exterminador :movie: 
@@ -16,7 +22,41 @@
   :ARCHIVE:  lists.org_archive::* Games played
   :END:
 ** Buy: 
+*** Civilization                                                    :history:
+*** Age of Empires 2                                                :history:
+
 * Books to read
-  :PROPERTIES:
-  :ARCHIVE: lists.org_archive::* Read books
-  :END:
+** Odisseia 
+  Added: <2020-03-29 Sun>
+ :INFO:
+ :AUTHOR: Homero
+ :END:
+** Ilíada 
+  Added: <2020-03-29 Sun>
+ :INFO:
+ :AUTHOR: Homero
+ :END:
+
+** A Quinta Disciplina 
+  Added: <2020-04-10 sex>
+ :INFO:
+ :AUTHOR: 
+ :END:
+
+
+ :PROPERTIES:
+ :ARCHIVE: lists.org_archive::* Read books
+ :END:
+** O Trivium                                                     :philosophy:
+   Added: <2020-03-25 Wed>
+   :INFO:
+   :Author:   Sister Miriam Joseph
+   :END:
+
+** The problem of the puer aeternus                              :psychology:
+  Added: <2020-03-31 Tue>
+ :INFO:
+ :AUTHOR: Elizabeth von Franz
+ :END:
+
+* Articles to read 

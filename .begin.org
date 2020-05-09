@@ -10,20 +10,25 @@
 ** [[file://media/paulo/HDD_1/syncthing/org/habits.org][Tarefas Diárias]]
 ** [[file://media/paulo/HDD_1/syncthing/org/projetos.org][Projetos]]
 ** [[file://media/paulo/HDD_1/syncthing/org/notes.org][Notas]] 
+** [[/media/paulo/HDD_1/syncthing/org/lists.org][Listas]] 
+** [[/media/paulo/HDD_1/syncthing/org/personalinfo.org][Informaćão Pessoal]] 
+
 
 * Configurações 
   :PROPERTIES:
   :VISIBILITY: content
   :END:
 ** [[file://home/paulo/.emacs.d/config/config.org][config.org]]
-** [[file://home/paulo/.emacs.d/config/config.el][config.el]]
+** [[file://home/paulo/.emacs.d/config/org-agenda-config.org][org-agenda-config.org]]
+** [[file://home/paulo/.emacs][.emacs]]
+
 
 * Diretórios
   :PROPERTIES:
   :VISIBILITY: content
   :END:
 ** [[file://media/paulo/HDD_CREATIVE_FILES/src][src]]
-** [[file://home/paulo/Documents/historias][histórias]]
+** [[file://home/paulo/Documents/RPGs][RPGs]]
 ** [[file://home/paulo/Documents/academics][Faculdade]]
 ** [[file://media/paulo/HDD_1/syncthing/org][org-folder]]
 ** [[file://~/][homedir~]] 

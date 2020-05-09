@@ -1,27 +1,32 @@
-
 #+TITLE: Agenda 
 #+AUTHOR: Paulo
-#+SEQ_TODO: TODO(t) FAIL(f) PROJ(p) WAIT(w) | +REP(r) DONE(d)
-#+TAGS: [ CONTEXTO : CASA(1) TRABALHO(5) CELULAR(7) PAPEL(2) HOBBY(h) URGENT(U) IMPORTANT(I) ]
+#+OPTIONS: p:nil todo:t \n:t date:nil c:nil prop:t stat:t tags:t d:t
+#+SEQ_TODO: TODO(t) FAIL(f) PROJ(p) PAUSE(w) | +REP(r) DONE(d) CANCELLED(c)
+#+TAGS: [ CONTEXTO : CASA(1) TRABALHO(5) CELULAR(7) PHONE(8) PAPEL(2) HOBBY(h) URGENT(U) IMPORTANT(I) ]
 #+TAGS: [ CASA : COMPUTADOR(3) FLAUTA(f) ]
 #+TAGS: [ COMPUTADOR : EMACS(e) PROGRAMMING(p) ]
 #+TAGS: [ FACULDADE : UERJ(u) LAB_RELACOES(l) SPA(S) ]
 #+TAGS: [ INGLÊS : CNA(w) ] 
 
-* Trabalho 
+My to-do lists and projects and things of the like
 
-* Afazeres  
+* Trabalho
+  
+* Afazeres
   :PROPERTIES:
   :ARCHIVE:  todos.org_archive::* Afazeres gerais
   :END:
 
-* TODO Revisão semanal
-  SCHEDULED: <2020-04-12 Sun +7d>
 * Tarefas pessoais
   :PROPERTIES:
   :ARCHIVE:  todos.org_archive::* Tarefas pessoais
   :END:
 
-* Pessoas 
+* Pessoas
+  
 * Faculdade / Psicologia
-* Financeiro 
+  
+* Tarefas recorrentes 
+
+* Algum dia/talvez
+  

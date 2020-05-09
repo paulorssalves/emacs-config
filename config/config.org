@@ -1,3 +1,4 @@
+
 * Infrastructure
 #+BEGIN_SRC emacs-lisp
 (require 'package)
@@ -37,11 +38,9 @@
   
 #+BEGIN_SRC emacs-lisp 
  (setq hour (string-to-number (format-time-string "%H")))
- (cond ((and (< hour 5) (>= hour 0)) (load-theme 'solarized-gruvbox-dark t))
-	   ((and (>= hour 5) (<= hour 17)) (load-theme 'solarized-light t))
-	   ((and (>= hour 18) (<= hour 23)) (load-theme 'solarized-gruvbox-dark t)))
- (setq sml/no-confirm-load-theme t)
- (sml/setup)
+ (cond ((and (< hour 5) (>= hour 0)) (load-theme 'doom-dark+ t))
+	   ((and (>= hour 5) (<= hour 17)) (load-theme 'doom-acario-light t))
+	   ((and (>= hour 18) (<= hour 23)) (load-theme 'doom-dark+ t)))
 ;(hl-line-mode 1)
 (set-frame-parameter (selected-frame) 'alpha '(100 . 100))
 
@@ -67,21 +66,22 @@
    (require 'zen-mode)
    (require 'org-mouse)
 
-   (setq org-todo-keywords '((sequence "TODO(t)" "FAIL(f)" "|" "+REP(r)" "DONE(d)")))
+   (setq org-todo-keywords '((sequence "TODO(t)" "FAIL(f)" "PAUSE(w)" "SOMEDAY(s)" "ENGAGED(e)" "|" "+REP(r)" "DONE(d)" "CANCELLED(c)")))
    (setq org-todo-keyword-faces
 	 '(("TODO". "#ffbe57")
 	   ("+REP" . "#34a1eb")
 	   ("FAIL" . org-warning)
-	   ("DONE" . "green")))
+	   ("CANCELLED" . "#524e45")
+	   ("PAUSE" . "#918e86")
+	   ("SOMEDAY" . "#93adab")
+	   ("ENGAGED" . "#9fcf9f")
+	   ("DONE" . "#8cdb84")))
 
     (require 'org-bullets)
     (add-hook 'org-mode-hook (progn (lambda  ()
 				      "Word wrapping enabled"
 				      (org-bullets-mode 1)
 				      (setq truncate-lines nil))))
-
-    (setq org-directory "/media/paulo/HDD_1/Dropbox/org")
-    (setq org-default-notes-file (concat org-directory "/notes.org"))
 
     (defun my/copy-id-to-clipboard() "Copy the ID property value to killring,
 if no ID is there then create a new unique ID. 
@@ -148,19 +148,20 @@ text and copying to the killring."
 								  (agenda-minus-ical :maxlevel . 1)
 								  (projetos :maxlevel . 1))))))
 	;;; load a config file to give org-agenda vim keybindings
-	(global-set-key '[f1] 'org-agenda-list)
-	(global-set-key (kbd "C-c a") 'org-agenda)
+	;(global-set-key '[f1] 'org-agenda-list)
+	(global-set-key (kbd "<f1>") 'org-agenda)
 
  #+END_SRC
 *** Calendar
 
 #+BEGIN_SRC emacs-lisp
   (require 'org-gcal)
-  (setq org-gcal-client-id ""
-	org-gcal-client-secret ""
-	'(("pauloroberto.21s@gmail.com" . "/media/paulo/HDD_1/syncthing/org/gcalendar.org")))
+  (setq org-gcal-client-id "IMA FIRIN MAH LAZOR"
+	org-gcal-client-secret "SUM FRIES MODAFOCA"
+	'(("my email tho" . "syncthing org gcalendar dot org dir")))
 #+END_SRC
 *** Org capture 
+**** Setup
   #+BEGIN_SRC emacs-lisp 
   (require 'org-capture)
   (require 'noflet)
@@ -179,21 +180,21 @@ text and copying to the killring."
     (global-set-key (kbd "<f6>") 'org-capture)
 
   #+END_SRC
-**** Books and Articles
+**** Notes 
      #+BEGIN_SRC emacs-lisp
        ;;; book notes
        (setq notesdir "/media/paulo/HDD_1/syncthing/org/notes.org") 
        (add-to-list 'org-capture-templates
 		    '("n" "Note about a book" entry
 		      (file+olp notesdir "Capture" "Book notes") 
-		      "* %t \n:PROPERTIES:\n:LIVRO: %^{Livro}\n:PAGES: %^{Páginas}\n:END:"
+		      "* %t \n:PROPERTIES:\n:LIVRO: %^{Livro}\n:PAGES: %^{Páginas}\n:END:\n %?"
 		      :empty-lines 1 :jump-to-captured t))
 
 	;;; articles
        (add-to-list 'org-capture-templates
 		    '("a" "Note about an article" entry
 		      (file+olp notesdir "Capture" "Articles") 
-		      "* %t %^{Title} \n:PROPERTIES:\n:AUTHOR: %^{Author}\n:YEAR: %^{Year}\n:END:\n%?"
+		      "* %t %^{Title} \n:PROPERTIES:\n:AUTHOR: %^{Author}\n:YEAR: %^{Year}\n:JOURNAL: %^{Journal}\n:NUMBER: %^{Number}\n:VOLUME: %^{Volume}\n:PAGES: %^{Pages}\n:ADDRESS:%^{Address}:END:\n%?"
 		      :empty-lines 1 :jump-to-captured t))
      #+END_SRC
 **** Lists 
@@ -205,6 +206,13 @@ text and copying to the killring."
 		      (file+olp listsdir "Capture" "Books") 
 		      "* %^{Book title} %?\n Added: %t\n:INFO:\n:AUTHOR: %^{Author}\n:END:" :empty-lines 1))
 
+		      ;;; articles
+       (add-to-list 'org-capture-templates
+		    '("A" "Articles to read" entry
+		      (file+olp listsdir "Capture" "Artigos") 
+		      "* %^{Article title} %?\n Added: %t\n:INFO:\n:AUTHOR: %^{Author}\n:LINK: %^{Link}\n:END:" :empty-lines 1))
+
+		
 		      ;;; movies
        (add-to-list 'org-capture-templates
 		    '("m" "Movies/series to watch" entry
@@ -217,6 +225,18 @@ text and copying to the killring."
 		      (file+olp listsdir "Capture" "Games") 
 		      "* %^{Game title} %?\n Added: %t" :empty-lines 1))
      #+END_SRC 
+
+     #+RESULTS:
+     | s | Statistical refs | entry | (file+olp listsdir Capture Stats) | * %^{TITLE} |
+**** Referências 
+     #+BEGIN_SRC emacs-lisp 
+       ;;; referências
+		      (setq refsdir "/media/paulo/HDD_1/syncthing/org/refs.org")
+       (add-to-list 'org-capture-templates
+		    '("r" "Referências" entry
+		      (file+headline refsdir "Capture") 
+		      "* %^{TITLE} \n[[%^{URL}][link]]\nDescription: %?" :empty-lines 1))
+     #+END_SRC
 **** Todos
      #+BEGIN_SRC emacs-lisp 
        (setq tasksdir "/media/paulo/HDD_1/syncthing/org/todos.org")
@@ -224,6 +244,12 @@ text and copying to the killring."
 		    '("t" "Task / To-do" entry
 		      (file+headline tasksdir "Afazeres") 
 		      "* TODO %^{Description}\n%?" :empty-lines 1))
+
+       (add-to-list 'org-capture-templates
+		    '("w" "Weekly Review" entry
+		      (file+headline tasksdir "Afazeres") 
+		      (file "/media/paulo/HDD_1/syncthing/org/review_template.orgcaptmpl") :empty-lines 1))
+
      #+END_SRC
 **** Goals 
      #+BEGIN_SRC emacs-lisp
@@ -234,16 +260,46 @@ text and copying to the killring."
 		      "* %^{Title}\n:PROPERTIES:\n:GOAL: %^{Goal|Medium|Short|Long}\n:END:\nRecorded on %t\n:SMART:\n:SPECIFIC: %^{Specific description}\n:MEASURABLE: %^{How to measure progress in that goal?\n:ACTIVITY: %^{What activity needs to be done to accomplish that goal?}\n:RESOURCES: %^{What do we need to do it? Do we already have it?}\n:TIMEBOX: %^{How much time should I give to this task, and how often?}\n:END:\n:ACTIONS:\nLinks to actions that support this goal\n:END:\n" :empty-lines 1))
 
      #+END_SRC
-**** Journal entries
+**** Writing 
      #+BEGIN_SRC emacs-lisp 
-       (setq journaldir "/media/paulo/HDD_1/syncthing/org/journaling.org")
-	(add-to-list 'org-capture-templates
-		     '("j" "Journal entry" entry
-		       (file+headline journaldir "Capture") 
-		       "* %t - %^{Title}\n:LOGBOOK:\n%?:END:"
-		       :empty-lines 1 :jump-to-captured t))
- 
+       ;;; creative/productive writing
+       (setq writedir "/media/paulo/HDD_1/syncthing/org/writing.org")
+       (add-to-list 'org-capture-templates
+		       '("e" "creative/productive writing" entry
+			 (file+headline writedir "Capture") 
+			 "* %t - %^{Title}\nnote taken on %T\n %?"
+			 :empty-lines 1 :jump-to-captured t))
+
+       (setq tccdir "/media/paulo/HDD_1/syncthing/org/tcc.org")
+       (add-to-list 'org-capture-templates
+		       '("T" "Trabalho de conclusão de curso" entry
+			 (file+headline tccdir "Trabalho de Conclusão de Curso") 
+			 "* %t - %^{Title}\nnote taken on %T\n %?"
+			 :empty-lines 1 :jump-to-captured t))
+
+			 ;;; journaling
+	 (setq journaldir "/media/paulo/HDD_1/syncthing/org/journaling.org")
+	  (add-to-list 'org-capture-templates
+		       '("j" "Journal entry" entry
+			 (file+headline journaldir "Capture") 
+			 "* %t - %^{Title}\n:LOGBOOK:\n%?:END:"
+			 :empty-lines 1 :jump-to-captured t))
+
+
+       (setq blogpostsdir "/media/paulo/HDD_CREATIVE_FILES/src/blog/posts/new.html")
+       (add-to-list 'org-capture-templates
+		    '("p" "Novo post" plain 
+		      (file blogpostsdir)
+		      "{% extendds \"base.html\" %}\n{% block title %} %^{TITLE} {% endblock %}\n{% block content %}\n {% filter markdown %}\n%?\n{% endfilter %}\n{% endblock %}\n"
+		      :empty-lines 1 :jump-to-captured t))
+		      
+		  
      #+END_SRC
+
+
+     #+RESULTS:
+     | T | Trabalho de conclusão de curso | entry | (file+headline tccdir Trabalho de Conclusão de Curso) | * %t - %^{Title} |
+
 ** Markdown
    #+BEGIN_SRC emacs-lisp
    (setq markdown-open-command "/usr/bin/grip")
@@ -270,6 +326,10 @@ text and copying to the killring."
 #+BEGIN_SRC emacs-lisp
 
   (add-hook 'dired-mode-hook 'dired-hide-details-mode)
+
+ (add-hook 'magit-mode-hook
+       (lambda ()
+        (local-set-key (kbd "M-a") 'magit-remote-add)))
 
   (defun my-python-hooks ()
     (hl-line-mode 1)
@@ -304,6 +364,9 @@ text and copying to the killring."
 
 
 #+END_SRC
+
+#+RESULTS:
+| lambda | nil | (electric-pair-mode 1) |
 
 * extension functions 
 #+BEGIN_SRC emacs-lisp 
@@ -366,3 +429,12 @@ text and copying to the killring."
   (message (format "hi, %s! Everything is working as expected. Good to see you." user-login-name)))
 
 #+END_SRC
+* Shortcuts
+#+BEGIN_SRC emacs-lisp
+
+(global-set-key (kbd "C-c w") 'web-mode-surround)
+	(global-set-key (kbd "<f9>") 'magit)
+#+END_SRC
+
+#+RESULTS:
+: magit

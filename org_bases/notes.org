@@ -1,40 +1,28 @@
 #+TITLE: Notes 
 #+AUTHOR: Paulo
-#+TAGS: gestao_t(g) habil_sociais(h) autoeficácia(a) procrastinacao(p) adatapcao_academ(d)
+#+TAGS: gestao_t(g) habil_sociais(h) autoeficácia(a) procrastinacao(p) adatapcao_academ(d) IMPORTANT(I) TCC(T)
+#+OPTIONS: p:nil todo:t \n:t date:nil c:nil prop:t stat:t tags:t d:t
+#+COLUMNS: %60ITEM %TAGS
 
+This is a file suited for note-taking related to books and articles
+
+* [[./writing.org][creative/productive writing]]
+** [[./tcc.org][trabalho de conclusão de curso]]
+* [[./journaling.org][journaling]]
+* [[./refs.org][referências]]
+
+  
 * Capture
-** Books 
 ** Book notes
+
 ** Articles
 * Book notes
+  :PROPERTIES:
+  :ARCHIVE:  notes.org_archive::* Books read
+  :END:
+
 * Articles
   :PROPERTIES:
   :ARCHIVE:  notes.org_archive::* Articles read
   :END:
-* Emacs notes:
-** Internal linking
-*** I can create links in the following way: 
-    This link goes to the [[Capture][Capture headline]].
-*** And then I can create another headline 
-    :PROPERTIES:
-    :CUSTOM_ID: showoff123
-    :END:
-    heyyy
-
-*** And then I can call it
-    Like [[named_item][this]] 
-    This, however, only works on headlines with content inside them. Dunno why.
-**** And give it a name like below:
-    #+NAME: named_item 
-    Hey, apple
-*** I can also create links like this:
-    I can give something a custom ID. In the "and then I can create another headline" headline I wrote for it a custom ID. I can go to it through [[#showoff123][this]] link.
-*** There is also something called "Radio targets". 
-    If I write down the name Lewin, for example, it will create links everywhere the name "Lewin" is written, an they will point to where the <<<radio>>> target is..
-** External linking 
-*** Besides linking to websites, files and whatnot, I can also create links for other notes within my org environment.
-    Like [[id:2497c794-95f6-43cd-998d-cb72d1126772][this]]
-** Agenda 
-*** Follow mode:
-    You can activate follow mode in the evil-agenda with shif+f or F
-
+  

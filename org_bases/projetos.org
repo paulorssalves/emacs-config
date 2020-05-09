@@ -3,15 +3,65 @@
 #+AUTHOR: Paulo
 #+PROPERTY: Goal_ALL Short Medium Long
 #+COLUMNS: %58ITEM(Details) %TAGS(Context) %7TODO(To Do) %7Goal(Goal)
-#+SEQ_TODO: TODO(t) SOMEDAY(s) HOLD(h) | ENGAGED(e) DONE(d) CANCELLED(c) 
+#+SEQ_TODO: TODO(t) SOMEDAY(s) PAUSE(p) | ENGAGED(e) DONE(d) CANCELLED(c) FAIL(f) 
+
+
+* Trabalho de Conclusão de Curso
+** Autores
+** Referências
+** Problemas teóricos 
+** Problemas éticos 
+ 
 
 * Capture
 
-* TODO Angariar recursos a respeito da vida Unabomber até Junho
-  :PROPERTIES:
-  :Goal:     Medium
-  :END:
+
+** TODO Comprar "A quinta disciplina"
+
 * Aprender
+** ENGAGED Começar Estatística e Análise de Dados até Maio
+   :PROPERTIES:
+   :Goal:     Medium
+   :END:
+   Necessário:
+   Aprender Psicometria
+   Aprender Estatística
+   Aprender R
+   Aprender SQL
+*** Estudar Psicometria com...
+**** Antônio Damazio
+**** Acredito ter uma disciplina de Psicometria na faculdade?
+*** ENGAGED Aprender R
+**** Luke Smith's videos
+**** "R Statistics for Psychologists"
+     SCHEDULED: <2020-06-08 Mon>
+*** Aprender SQL 
+**** FreeCodeCamp 
+     :PROPERTIES:
+     :Goal:     Medium
+     :END:
+*** Courses: 
+    MIT OCW
+    [[https://www.udacity.com/course/intro-to-descriptive-statistics--ud827][Descriptive statistics]]
+    [[https://www.udacity.com/course/intro-to-inferential-statistics--ud201][Inferential statistics]]
+    [[https://support.sas.com/edu/schedules.html?id=1979&ctry=US][Anova and Regression]]
 * Leituras
-* Fazer Vídeos 
+** ENGAGED Começar a ler a Bíblia até Junho
+   :PROPERTIES:
+   :Goal:     Medium
+   :END:
+* Standby
+** Em pausa
+
+*** PAUSE Organizar minhas notas do Evernote de acordo com o Orgmode.
+
     
+** Algum dia/talvez
+    
+
+*** SOMEDAY Instalar dwm em uma virtual machine para testar
+* Cancelled
+** CANCELLED Começar a ler  הנסיך הקטן até Novembro
+   :PROPERTIES:
+   :Goal:     Long
+   :END:

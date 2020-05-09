@@ -20,6 +20,8 @@
       "gj" 'org-agenda-goto-date
       "gJ" 'org-agenda-clock-goto
       "gm" 'org-agenda-bulk-mark
+      "g*" 'org-agenda-bulk-mark-all
+      "B" 'org-agenda-bulk-action
       "go" 'org-agenda-open-link
       "s" 'org-agenda-schedule
       "+" 'org-agenda-priority-up
@@ -37,7 +39,9 @@
       "x" 'org-agenda-exit
       "j"  'org-agenda-next-line
       "k"  'org-agenda-previous-line
-      "vt" 'org-agenda-toggle-time-grid
+      "vt" 'org-agenda-fortnight-view
+      "vm" 'org-agenda-month-view
+      "vg" 'org-agenda-toggle-time-grid
       "va" 'org-agenda-archives-mode
       "vw" 'org-agenda-week-view
       "vl" 'org-agenda-log-mode
@@ -74,3 +78,5 @@
       "g\\" 'org-agenda-filter-by-tag-refine
       "]" 'org-agenda-manipulate-query-subtract)))
 #+END_SRC
+
+#+RESULTS:
