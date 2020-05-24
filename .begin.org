@@ -13,7 +13,6 @@
 ** [[/media/paulo/HDD_1/syncthing/org/lists.org][Listas]] 
 ** [[/media/paulo/HDD_1/syncthing/org/personalinfo.org][Informaćão Pessoal]] 
 
-
 * Configurações 
   :PROPERTIES:
   :VISIBILITY: content
@@ -22,14 +21,13 @@
 ** [[file://home/paulo/.emacs.d/config/org-agenda-config.org][org-agenda-config.org]]
 ** [[file://home/paulo/.emacs][.emacs]]
 
-
 * Diretórios
   :PROPERTIES:
   :VISIBILITY: content
   :END:
 ** [[file://media/paulo/HDD_CREATIVE_FILES/src][src]]
 ** [[file://home/paulo/Documents/RPGs][RPGs]]
+** [[file://home/paulo/Documents/Ingles/CNA][CNA]]
 ** [[file://home/paulo/Documents/academics][Faculdade]]
 ** [[file://media/paulo/HDD_1/syncthing/org][org-folder]]
 ** [[file://~/][homedir~]] 
-    
