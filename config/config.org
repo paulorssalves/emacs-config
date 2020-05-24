@@ -29,10 +29,15 @@
 (require 'evil-magit) 
 (visual-line-mode)
 #+END_SRC
+** Fixing cedilla
+#+BEGIN_SRC emacs-lisp   
+(global-set-key (kbd "ć") (lambda () (interactive) (insert "ç")))
+#+END_SRC
 ** Working around gnu elpa bugs
 #+BEGIN_SRC emacs-lisp
 (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 (setq package-check-signature nil) 
+
 #+END_SRC
 * Appearance
   
@@ -156,9 +161,9 @@ text and copying to the killring."
 
 #+BEGIN_SRC emacs-lisp
   (require 'org-gcal)
-  (setq org-gcal-client-id "IMA FIRIN MAH LAZOR"
-	org-gcal-client-secret "SUM FRIES MODAFOCA"
-	org-gcal-file-alist '(("my email tho" . "syncthing org gcalendar dot org dir")))
+  (setq org-gcal-client-id "410541424117-nmmt1i4gb4qfupsivrmr16o5a14spqrj.apps.googleusercontent.com"
+	org-gcal-client-secret "yY07io3s20vsOVMOybKBb748"
+	org-gcal-file-alist '(("pauloroberto.21s@gmail.com" . "/media/paulo/HDD_1/syncthing/org/gcalendar.org")))
 #+END_SRC
 *** Org capture 
 **** Setup
@@ -273,7 +278,7 @@ text and copying to the killring."
        (setq tccdir "/media/paulo/HDD_1/syncthing/org/tcc.org")
        (add-to-list 'org-capture-templates
 		       '("T" "Trabalho de conclusão de curso" entry
-			 (file+headline tccdir "Trabalho de Conclusão de Curso") 
+			 (file+headline tccdir "Texto de fato") 
 			 "* %t - %^{Title}\nnote taken on %T\n %?"
 			 :empty-lines 1 :jump-to-captured t))
 
@@ -298,7 +303,7 @@ text and copying to the killring."
 
 
      #+RESULTS:
-     | T | Trabalho de conclusão de curso | entry | (file+headline tccdir Trabalho de Conclusão de Curso) | * %t - %^{Title} |
+     | T | Trabalho de conclusão de curso | entry | (file+headline tccdir Texto de fato) | * %t - %^{Title} |
 
 ** Markdown
    #+BEGIN_SRC emacs-lisp
