@@ -173,7 +173,6 @@ text and copying to the killring."
   (require 'org-gcal)
   (setq org-gcal-client-id ""
 	org-gcal-client-secret ""
-	'(("pauloroberto.21s@gmail.com" . "/media/paulo/syncthing/An&M/org/gcalendar.org")))
 #+END_SRC
 *** Org capture 
 **** Setup
