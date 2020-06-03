@@ -171,7 +171,6 @@ text and copying to the killring."
 
 #+BEGIN_SRC emacs-lisp
   (require 'org-gcal)
-  (setq org-gcal-client-id ""
 	org-gcal-client-secret ""
 #+END_SRC
 *** Org capture 
