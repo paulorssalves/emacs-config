@@ -174,7 +174,7 @@ text and copying to the killring."
   (setq gcal-envs (split-string (shell-command-to-string "/home/${USER}/.bin/getgcalvar") "\n")) 
   (setq org-gcal-client-id (car (cdr gcal-envs)) ; client client id 
 	org-gcal-client-secret (car gcal-envs) ; client secret 
-	'(("pauloroberto.21s@gmail.com" . "/media/paulo/HDD_1/syncthing/org/gcalendar.org"))
+	'(("pauloroberto.21s@gmail.com" . "/media/paulo/HDD_1/syncthing/org/gcalendar.org")))
 #+END_SRC
 *** Org capture 
 **** Setup
