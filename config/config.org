@@ -1,4 +1,3 @@
-
 * Infrastructure
 #+BEGIN_SRC emacs-lisp
 (require 'package)
@@ -24,11 +23,23 @@
     (set-frame-font "Monospace-13" nil t))))
 
 (add-to-list 'load-path "~/.emacs.d/lisp")
-(require 'helm-config)
+(setq ido-enable-flex-matching t)
+(setq ido-everywhere t)
+(ido-mode 1)
 (evil-mode 1)
+
+
+(setq-default abbrev-mode t)
+(setq abbrev-file-name "~/.emacs.d/abbrev_defs")
+
+(require 'buffer-flip)
 (require 'evil-magit) 
 (visual-line-mode)
+
 #+END_SRC
+
+#+RESULTS:
+
 ** Fixing cedilla
 #+BEGIN_SRC emacs-lisp   
 (global-set-key (kbd "ć") (lambda () (interactive) (insert "ç")))
@@ -132,10 +143,9 @@ text and copying to the killring."
       #+BEGIN_SRC emacs-lisp
 	(require 'org-habit)
 	(setq org-habit-graph-column 100) 
-	(org-gcal-sync)
 
-	(setq syncdir "/media/paulo/HDD_1/syncthing/org/")
-	(setq confdir "/home/paulo/.emacs.d/config/")
+	(setq syncdir "/media/paulo/syncthing/An&M/org/")
+	(setq confdir "/home/monica/.emacs.d/config/")
 
 	(setq agenda-files (list
 			    (concat syncdir "todos.org")
@@ -184,8 +194,8 @@ text and copying to the killring."
   #+END_SRC
 **** Notes 
      #+BEGIN_SRC emacs-lisp
-       ;;; book notes
-       (setq notesdir "/media/paulo/HDD_1/syncthing/org/notes.org") 
+     ;;; book notes
+       (setq notesdir "/media/paulo/syncthing/An&M/org/notes.org") 
        (add-to-list 'org-capture-templates
 		    '("n" "Note about a book" entry
 		      (file+olp notesdir "Capture" "Book notes") 
@@ -202,7 +212,7 @@ text and copying to the killring."
 **** Lists 
      #+BEGIN_SRC emacs-lisp 
      ;;; books
-       (setq listsdir "/media/paulo/HDD_1/syncthing/org/lists.org") 
+       (setq listsdir "/media/paulo/syncthing/An&M/org/lists.org") 
        (add-to-list 'org-capture-templates
 		    '("b" "Books to read" entry
 		      (file+olp listsdir "Capture" "Books") 
@@ -233,7 +243,7 @@ text and copying to the killring."
 **** Referências 
      #+BEGIN_SRC emacs-lisp 
        ;;; referências
-		      (setq refsdir "/media/paulo/HDD_1/syncthing/org/refs.org")
+		      (setq refsdir "/media/paulo/syncthing/An&M/org/refs.org")
        (add-to-list 'org-capture-templates
 		    '("r" "Referências" entry
 		      (file+headline refsdir "Capture") 
@@ -241,7 +251,7 @@ text and copying to the killring."
      #+END_SRC
 **** Todos
      #+BEGIN_SRC emacs-lisp 
-       (setq tasksdir "/media/paulo/HDD_1/syncthing/org/todos.org")
+       (setq tasksdir "/media/paulo/syncthing/An&M/org/todos.org")
        (add-to-list 'org-capture-templates
 		    '("t" "Task / To-do" entry
 		      (file+headline tasksdir "Afazeres") 
@@ -250,12 +260,12 @@ text and copying to the killring."
        (add-to-list 'org-capture-templates
 		    '("w" "Weekly Review" entry
 		      (file+headline tasksdir "Afazeres") 
-		      (file "/media/paulo/HDD_1/syncthing/org/review_template.orgcaptmpl") :empty-lines 1))
+		      (file "/media/paulo/syncthing/An&M/org/review_template.orgcaptmpl") :empty-lines 1))
 
      #+END_SRC
 **** Goals 
      #+BEGIN_SRC emacs-lisp
-       (setq goalsdir "/media/paulo/HDD_1/syncthing/org/projetos.org")
+       (setq goalsdir "/media/paulo/syncthing/An&M/org/projetos.org")
        (add-to-list 'org-capture-templates
 		    '("g" "Goal / Project" entry
 		      (file+headline goalsdir "Capture") 
@@ -265,14 +275,14 @@ text and copying to the killring."
 **** Writing 
      #+BEGIN_SRC emacs-lisp 
        ;;; creative/productive writing
-       (setq writedir "/media/paulo/HDD_1/syncthing/org/writing.org")
+       (setq writedir "/media/paulo/syncthing/An&M/org/writing.org")
        (add-to-list 'org-capture-templates
 		       '("e" "creative/productive writing" entry
 			 (file+headline writedir "Capture") 
 			 "* %t - %^{Title}\nnote taken on %T\n %?"
 			 :empty-lines 1 :jump-to-captured t))
 
-       (setq tccdir "/media/paulo/HDD_1/syncthing/org/tcc.org")
+       (setq tccdir "/media/paulo/syncthing/An&M/org/tcc.org")
        (add-to-list 'org-capture-templates
 		       '("T" "Trabalho de conclusão de curso" entry
 			 (file+headline tccdir "Texto de fato") 
@@ -280,11 +290,25 @@ text and copying to the killring."
 			 :empty-lines 1 :jump-to-captured t))
 
 			 ;;; journaling
-	 (setq journaldir "/media/paulo/HDD_1/syncthing/org/journaling.org")
-	  (add-to-list 'org-capture-templates
-		       '("j" "Journal entry" entry
-			 (file+headline journaldir "Capture") 
-			 "* %t - %^{Title}\n:LOGBOOK:\n%?:END:"
+       (setq journaldir "/media/paulo/syncthing/An&M/org/journaling.org")
+       (add-to-list 'org-capture-templates
+		    '("j" "Journal entry" entry
+		      (file+headline journaldir "Capture") 
+		      "* %t - %^{Title}\n:LOGBOOK:\n%?:END:"
+		      :empty-lines 1 :jump-to-captured t))
+
+ 
+       (setq unidir "/media/paulo/syncthing/An&M/org/uni/uninotes.org")
+       (defun capture-report-data-file (path)
+	 (let ((name (read-string "Name: ")))
+	   (expand-file-name (format "%s-%s.org"
+				     (format-time-string "%Y-%m-%d")
+				     name) path)))
+				    
+       (add-to-list 'org-capture-templates
+		       '("u" "Uni notes" entry
+			 (file unidir) 
+			 "* %t - %^{Title}\n%?"
 			 :empty-lines 1 :jump-to-captured t))
 
 
@@ -292,15 +316,15 @@ text and copying to the killring."
        (add-to-list 'org-capture-templates
 		    '("p" "Novo post" plain 
 		      (file blogpostsdir)
-		      "{% extendds \"base.html\" %}\n{% block title %} %^{TITLE} {% endblock %}\n{% block content %}\n {% filter markdown %}\n%?\n{% endfilter %}\n{% endblock %}\n"
+		      "{% extends \"base.html\" %}\n{% block title %} %^{TITLE} {% endblock %}\n{% block content %}\n {% filter markdown %}\n%?\n{% endfilter %}\n{% endblock %}\n"
 		      :empty-lines 1 :jump-to-captured t))
-		      
-		  
+
+
      #+END_SRC
 
 
      #+RESULTS:
-     | T | Trabalho de conclusão de curso | entry | (file+headline tccdir Texto de fato) | * %t - %^{Title} |
+     | (u Uni notes entry (file (capture-report-data-file unidir)) * %t - %^{Title} |
 
 ** Markdown
    #+BEGIN_SRC emacs-lisp
@@ -310,7 +334,6 @@ text and copying to the killring."
    #+BEGIN_SRC emacs-lisp
    (add-to-list 'load-path "~/.emacs.d/lisp/auctex-12.2")
    (load "auctex.el" nil t t)
-   (load "preview-latex.el" nil t t)
    
    
    ;; compile to pdf automatically
@@ -434,9 +457,24 @@ text and copying to the killring."
 * Shortcuts
 #+BEGIN_SRC emacs-lisp
 
-(global-set-key (kbd "C-c w") 'web-mode-surround)
-	(global-set-key (kbd "<f9>") 'magit)
+  (global-set-key (kbd "C-c w") 'web-mode-surround)
+  (global-set-key (kbd "<f5>") 'clone-indirect-buffer)
+  (global-set-key (kbd "<f9>") 'magit)
+
+  (global-set-key (kbd "C-x C-b") 'ido-switch-buffer)
+
+  ;; transient keymap used once cycling starts
+  (global-set-key (kbd "M-b")   'buffer-flip-forward) 
+  (global-set-key (kbd "M-S-b") 'buffer-flip-backward)
+
+  (setq buffer-flip-skip-patterns 
+	'("^\\*Messages\\*"
+	  "^\\*Completions\\*"
+	  "^\\*Compile-Log\\*"
+	  "^\\*WoMan-Log\\*"
+	  "^\\*Scratch\\*$"))
+
 #+END_SRC
 
 #+RESULTS:
-: magit
+| ^\*Messages\* | ^\*Completions\* | ^\*Compile-Log\* | ^\*WoMan-Log\* | ^\*Scratch\*$ |
