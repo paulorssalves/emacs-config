@@ -161,7 +161,6 @@ text and copying to the killring."
 
 #+BEGIN_SRC emacs-lisp
   (require 'org-gcal)
-	'(("pauloroberto.21s@gmail.com" . "/media/paulo/HDD_1/syncthing/org/gcalendar.org")))
 #+END_SRC
 *** Org capture 
 **** Setup
