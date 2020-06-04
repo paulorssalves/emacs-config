@@ -167,7 +167,7 @@
  #+END_SRC
 **** Org capture 
 ***** Setup
-      Configurando o org mode
+      Configurando o org-capture 
    #+BEGIN_SRC emacs-lisp 
    (require 'org-capture)
 
