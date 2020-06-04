@@ -1,484 +1,452 @@
-* Infrastructure
-#+BEGIN_SRC emacs-lisp
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-(package-initialize)
 
-(cond
- ((string-equal "windows-nt" system-type)
-  (progn
-    (setq initial-buffer-choice (format "c:/Users/%s/OneDrive/Documentos/emacs/begin.org" user-login-name))
-    (setq package-check-signature nil)
-    ;; setting proper fonts for windows
-    (add-to-list 'default-frame-alist '(font . "Lucida Console-12"))  
-    (set-face-attribute 'default t :font "Lucida Console-12")  
-    (set-face-attribute 'default nil :font "Lucida Console-12")  
-    (set-frame-font "Lucida Console-12" nil t))) 
- ((string-equal "gnu/linux" system-type)
-  (progn
-    (setq initial-buffer-choice "~/.begin.org") ;; setting proper fonts for linux 
-    (add-to-list 'default-frame-alist '(font . "Monospace-13"))  
-    (set-face-attribute 'default t :font "Monospace-13")  
-    (set-face-attribute 'default nil :font "Monospace-13")  
-    (set-frame-font "Monospace-13" nil t))))
+#+TITLE: Configurações
+#+AUTHOR: Paulo R.S.S. Alves
 
-(add-to-list 'load-path "~/.emacs.d/lisp")
-(setq ido-enable-flex-matching t)
-(setq ido-everywhere t)
-(ido-mode 1)
-(evil-mode 1)
+* Configurações 
+** Infraestrutura 
+ Habilitar melpa etc
+ #+BEGIN_SRC emacs-lisp
+ (require 'package)
+ (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+ (package-initialize)
 
+ ;;; resolver alguns problemas de conectividade com o MELPA
+ (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+ (setq package-check-signature nil) 
+ #+END_SRC
 
-(setq-default abbrev-mode t)
-(setq abbrev-file-name "~/.emacs.d/abbrev_defs")
+ Promover algumas mudanças dependendo de qual sistema operacional eu estou usando
+ #+BEGIN_SRC emacs-lisp 
+ (cond
+ ;;;;; windows
+  ((string-equal "windows-nt" system-type)
+   (progn
+     (setq initial-buffer-choice (format "c:/Users/%s/OneDrive/Documentos/emacs/begin.org" user-login-name))
+     (setq package-check-signature nil)
+     ;; setting proper fonts for windows
+     (add-to-list 'default-frame-alist '(font . "Lucida Console-12"))  
+     (set-face-attribute 'default t :font "Lucida Console-12")  
+     (set-face-attribute 'default nil :font "Lucida Console-12")  
+     (set-frame-font "Lucida Console-12" nil t))) 
+ ;;;;; linux
+  ((string-equal "gnu/linux" system-type)
+   (progn
+     (setq initial-buffer-choice "~/.begin.org") ;; setting proper fonts for linux 
+     (add-to-list 'default-frame-alist '(font . "Monospace-13"))  
+     (set-face-attribute 'default t :font "Monospace-13")  
+     (set-face-attribute 'default nil :font "Monospace-13")  
+     (set-frame-font "Monospace-13" nil t))))
 
-(require 'buffer-flip)
-(require 'evil-magit) 
-(visual-line-mode)
+ #+END_SRC
 
+ funcionalidades
+ #+BEGIN_SRC emacs-lisp 
+   (add-to-list 'load-path "~/.emacs.d/lisp")
+   (evil-mode 1)
+
+   ;; ido
+   (setq ido-enable-flex-matching t)
+   (setq ido-everywhere t)
+   (ido-mode 1)
+
+   (setq-default abbrev-mode t)
+   (setq abbrev-file-name "~/.emacs.d/abbrev_defs")
+
+   (require 'buffer-flip)
+   (setq buffer-flip-skip-patterns 
+	 '("^\\*Messages\\*"
+	   "^\\*Completions\\*"
+	   "^\\*Compile-Log\\*"
+	   "^\\*WoMan-Log\\*"
+	   "^\\*Scratch\\*$"))
+
+   (require 'evil-magit) 
+   (visual-line-mode)
+ #+END_SRC
+
+ Consertar um pequeno problema de localização
+ #+BEGIN_SRC emacs-lisp
+
+ ;; consertar cedilha
+ (global-set-key (kbd "ć") (lambda () (interactive) (insert "ç")))
+ #+END_SRC
+** Aparência 
+*** Temas
+ #+BEGIN_SRC emacs-lisp 
+  (setq hour (string-to-number (format-time-string "%H")))
+  (cond ((and (< hour 5) (>= hour 0)) (load-theme 'doom-dark+ t))
+	    ((and (>= hour 5) (<= hour 17)) (load-theme 'doom-acario-light t))
+	    ((and (>= hour 18) (<= hour 23)) (load-theme 'doom-dark+ t)))
+ ;(hl-line-mode 1)
+ (set-frame-parameter (selected-frame) 'alpha '(100 . 100))
 #+END_SRC
-
-#+RESULTS:
-
-** Fixing cedilla
-#+BEGIN_SRC emacs-lisp   
-(global-set-key (kbd "ć") (lambda () (interactive) (insert "ç")))
-#+END_SRC
-** Working around gnu elpa bugs
-#+BEGIN_SRC emacs-lisp
-(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
-(setq package-check-signature nil) 
-
-#+END_SRC
-* Appearance
-  
+*** Menus, barras etc
 #+BEGIN_SRC emacs-lisp 
- (setq hour (string-to-number (format-time-string "%H")))
- (cond ((and (< hour 5) (>= hour 0)) (load-theme 'doom-dark+ t))
-	   ((and (>= hour 5) (<= hour 17)) (load-theme 'doom-acario-light t))
-	   ((and (>= hour 18) (<= hour 23)) (load-theme 'doom-dark+ t)))
-;(hl-line-mode 1)
-(set-frame-parameter (selected-frame) 'alpha '(100 . 100))
-
-
-
-(global-linum-mode)
-(hl-line-mode 1)
-(fringe-mode 0)
-(setq linum-format " %d  ")
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-(scroll-bar-mode -1)
-(show-paren-mode 1)
-
-#+END_SRC
-
-* Markup
-** Org mode
-*** Geral
- #+BEGIN_SRC emacs-lisp  
-
-   (require 'ob-lilypond)
-   (require 'zen-mode)
-   (require 'org-mouse)
-
-   (setq org-todo-keywords '((sequence "TODO(t)" "FAIL(f)" "PAUSE(w)" "SOMEDAY(s)" "ENGAGED(e)" "|" "+REP(r)" "DONE(d)" "CANCELLED(c)")))
-   (setq org-todo-keyword-faces
-	 '(("TODO". "#ffbe57")
-	   ("+REP" . "#34a1eb")
-	   ("FAIL" . org-warning)
-	   ("CANCELLED" . "#524e45")
-	   ("PAUSE" . "#918e86")
-	   ("SOMEDAY" . "#93adab")
-	   ("ENGAGED" . "#9fcf9f")
-	   ("DONE" . "#8cdb84")))
-
-    (require 'org-bullets)
-    (add-hook 'org-mode-hook (progn (lambda  ()
-				      "Word wrapping enabled"
-				      (org-bullets-mode 1)
-				      (setq truncate-lines nil))))
-
-    (defun my/copy-id-to-clipboard() "Copy the ID property value to killring,
-if no ID is there then create a new unique ID. 
-This function works only in org-mode buffers.
- 
-The purpose of this function is to easily construct id:-links to 
-org-mode items. If its assigned to a key it saves you marking the
-text and copying to the killring."
-       (interactive)
-       (when (eq major-mode 'org-mode) ; do this only in org-mode buffers
-	 (setq mytmpid (funcall 'org-id-get-create))
-	 (kill-new mytmpid)
-	 (message "Copied %s to killring (clipboard)" mytmpid)
-       ))
- 
-(global-set-key (kbd "<f3>") 'my/copy-id-to-clipboard)
-(global-set-key (kbd "C-c s") 'org-sort)
+ ;; removendo barras e scroll etc
+ (global-linum-mode)
+ (hl-line-mode 1)
+ (fringe-mode 0)
+ (setq linum-format " %d  ")
+ (tool-bar-mode -1)
+ (menu-bar-mode -1)
+ (scroll-bar-mode -1)
+ (show-paren-mode 1)
  #+END_SRC
-*** Tags 
-  #+BEGIN_SRC emacs-lisp 
-    (add-to-list 'org-file-apps '(directory . emacs))
-    (setq org-tag-alist
-	    ;;; org tags for to-do lists
-	  '(("home" . ?1)
-	    ("rua" . ?r)
-	    ("computador" . ?c)
-	    ("PHONE" . ?P)
-	    ("caderno" . ?C)
-	    ("URGENT" . ?3)
-	    ("Inglês" . ?6)
-	    ("Flauta" . ?f)
-	    ("UERJ" . ?u)
-	    ("work" . ?w)
-	    ("cellphone" . ?7)
-	    ("programming" . ?p)
-	    ("emacs" . ?e)))
-    #+END_SRC
-*** Publish
-    #+BEGIN_SRC emacs-lisp
-    (require 'ox-twbs)
-    #+END_SRC
-*** Agenda
-      #+BEGIN_SRC emacs-lisp
-	(require 'org-habit)
-	(setq org-habit-graph-column 100) 
+** Linguages de marcação 
+ Configurações diversas para diferentes linguades de marcação
+*** Org mode
+**** Geral
+  #+BEGIN_SRC emacs-lisp  
 
-	(setq syncdir "/media/paulo/syncthing/An&M/org/")
-	(setq confdir "/home/monica/.emacs.d/config/")
+    (require 'ob-lilypond)
+    (require 'zen-mode)
+    (require 'org-mouse)
 
-	(setq agenda-files (list
-			    (concat syncdir "todos.org")
-			    (concat syncdir "habits.org")
-			    (concat syncdir "gcalendar.org")))
+    (setq org-todo-keywords '((sequence "TODO(t)" "FAIL(f)" "PAUSE(w)" "SOMEDAY(s)" "ENGAGED(e)" "|" "+REP(r)" "DONE(d)" "CANCELLED(c)")))
+    (setq org-todo-keyword-faces
+	  '(("TODO". "#ffbe57")
+	    ("+REP" . "#34a1eb")
+	    ("FAIL" . org-warning)
+	    ("CANCELLED" . "#524e45")
+	    ("PAUSE" . "#918e86")
+	    ("SOMEDAY" . "#93adab")
+	    ("ENGAGED" . "#9fcf9f")
+	    ("DONE" . "#8cdb84")))
 
-	(add-hook 'after-init-hook (lambda ()
-				     (progn 
-				       (org-babel-load-file (concat confdir "org-agenda-config.org"))
-				       (setq org-agenda-files agenda-files)
-				       ;;; refile
-				       (setq agenda-minus-ical (butlast org-agenda-files))
-				       (setq projetos (concat syncdir "projetos.org"))
-				       (setq org-refile-targets '((nil :maxlevel . 1)
-								  (agenda-minus-ical :maxlevel . 1)
-								  (projetos :maxlevel . 1))))))
-	;;; load a config file to give org-agenda vim keybindings
-	;(global-set-key '[f1] 'org-agenda-list)
-	(global-set-key (kbd "<f1>") 'org-agenda)
-
- #+END_SRC
-*** Calendar
-
-#+BEGIN_SRC emacs-lisp
-  (require 'org-gcal)
-  (setq gcal-envs (split-string (shell-command-to-string "/home/${USER}/.bin/getgcalvar") "\n")) 
-  (setq org-gcal-client-id (car (cdr gcal-envs)) ; client client id 
-	org-gcal-client-secret (car gcal-envs) ; client secret 
-	'(("pauloroberto.21s@gmail.com" . "/media/paulo/HDD_1/syncthing/org/gcalendar.org"))
-#+END_SRC
-*** Org capture 
-**** Setup
-  #+BEGIN_SRC emacs-lisp 
-  (require 'org-capture)
-  (require 'noflet)
-  (setq inhibit-compacting-font-caches t)
-  (defun make-capture-frame ()
-    "Create a new frame and run org-capture."
-    (interactive)
-    (make-frame '((name . "capture")))
-    (select-frame-by-name "capture")
-    (delete-other-windows)
-    (noflet ((switch-to-buffer-other-window (buf) (switch-to-buffer buf)))
-      (org-capture)))
-      
-    (global-set-key (kbd "M-f") 'other-frame)
-;    (global-set-key (kbd "<f6>") 'make-capture-frame)
-    (global-set-key (kbd "<f6>") 'org-capture)
-
+     (require 'org-bullets)
+     (add-hook 'org-mode-hook (progn (lambda  ()
+				       "Word wrapping enabled"
+				       (org-bullets-mode 1)
+				       (setq truncate-lines nil))))
+     (add-to-list 'org-file-apps '(directory . emacs))
   #+END_SRC
-**** Notes 
+**** Publish
      #+BEGIN_SRC emacs-lisp
-     ;;; book notes
-       (setq notesdir "/media/paulo/syncthing/An&M/org/notes.org") 
-       (add-to-list 'org-capture-templates
-		    '("n" "Note about a book" entry
-		      (file+olp notesdir "Capture" "Book notes") 
-		      "* %t \n:PROPERTIES:\n:LIVRO: %^{Livro}\n:PAGES: %^{Páginas}\n:END:\n %?"
-		      :empty-lines 1 :jump-to-captured t))
-
-	;;; articles
-       (add-to-list 'org-capture-templates
-		    '("a" "Note about an article" entry
-		      (file+olp notesdir "Capture" "Articles") 
-		      "* %t %^{Title} \n:PROPERTIES:\n:AUTHOR: %^{Author}\n:YEAR: %^{Year}\n:JOURNAL: %^{Journal}\n:NUMBER: %^{Number}\n:VOLUME: %^{Volume}\n:PAGES: %^{Pages}\n:ADDRESS:%^{Address}:END:\n%?"
-		      :empty-lines 1 :jump-to-captured t))
+     ;;;; exportar para HTML com css do Twitter Bootstrap
+     ;;;; não é lá essas coisas
+     (require 'ox-twbs)
+    
+     ;;;; esse aqui parece mais interessante: 
+     ;;;; exportar para HTML
+     ;;;; sem as manias esquisitas que vem
+     ;;;; com o org mode padrão
+     (require 'ox-slimhtml)
      #+END_SRC
-**** Lists 
-     #+BEGIN_SRC emacs-lisp 
-     ;;; books
-       (setq listsdir "/media/paulo/syncthing/An&M/org/lists.org") 
-       (add-to-list 'org-capture-templates
-		    '("b" "Books to read" entry
-		      (file+olp listsdir "Capture" "Books") 
-		      "* %^{Book title} %?\n Added: %t\n:INFO:\n:AUTHOR: %^{Author}\n:END:" :empty-lines 1))
+**** Agenda
+  #+BEGIN_SRC emacs-lisp
+	 (require 'org-habit)
+	 (setq org-habit-graph-column 100) 
 
-		      ;;; articles
-       (add-to-list 'org-capture-templates
-		    '("A" "Articles to read" entry
-		      (file+olp listsdir "Capture" "Artigos") 
-		      "* %^{Article title} %?\n Added: %t\n:INFO:\n:AUTHOR: %^{Author}\n:LINK: %^{Link}\n:END:" :empty-lines 1))
+	 (setq syncdir "/media/paulo/HDD_1/syncthing/org/")
+	 (setq confdir "/home/paulo/.emacs.d/config/")
 
-		
-		      ;;; movies
-       (add-to-list 'org-capture-templates
-		    '("m" "Movies/series to watch" entry
-		      (file+olp listsdir "Capture" "Movies/series") 
-		      "* %^{Movie title} %^{Kind of media|:movie:|:series:|:animu:} %?\n Added: %t" :empty-lines 1))
+	 (setq agenda-files (list
+			     (concat syncdir "todos.org")
+			     (concat syncdir "gcalendar.org")))
 
-		      ;;; games
-       (add-to-list 'org-capture-templates
-		    '("g" "Games to play" entry
-		      (file+olp listsdir "Capture" "Games") 
-		      "* %^{Game title} %?\n Added: %t" :empty-lines 1))
-     #+END_SRC 
+	 (add-hook 'after-init-hook (lambda ()
+				      (progn 
+					(org-babel-load-file (concat confdir "org-agenda-config.org"))
+					(setq org-agenda-files agenda-files)
+					;;; refile
+					(setq agenda-minus-ical (butlast org-agenda-files))
+					(setq projetos (concat syncdir "projetos.org"))
+					(setq org-refile-targets '((nil :maxlevel . 1)
+								   (agenda-minus-ical :maxlevel . 1)
+								   (projetos :maxlevel . 1))))))
+  #+END_SRC
+**** Calendar
+ [[https://github.com/myuhe/org-gcal.el][Org-gcal]] serve para sincronizar o meu google calendar com o org mode. 
+ O comando usado para pegar os valores das variáveis de ambiente para configurar o org-gcal é [[https://github.com/paulorssalves/useful-scripts/blob/master/getgcalvar][este]].
+ #+BEGIN_SRC emacs-lisp
+   (require 'org-gcal)
+   (setq gcal-envs (split-string (shell-command-to-string "/home/${USER}/.bin/getgcalvar") "\n")) 
+   (setq org-gcal-client-id (car (cdr gcal-envs)) ; client client id 
+	 org-gcal-client-secret (car gcal-envs) ; client secret 
+	 '(("pauloroberto.21s@gmail.com" . "/media/paulo/HDD_1/syncthing/org/gcalendar.org")))
+ #+END_SRC
+**** Org capture 
+***** Setup
+      Configurando o org mode
+   #+BEGIN_SRC emacs-lisp 
+   (require 'org-capture)
 
-     #+RESULTS:
-     | s | Statistical refs | entry | (file+olp listsdir Capture Stats) | * %^{TITLE} |
-**** Referências 
-     #+BEGIN_SRC emacs-lisp 
-       ;;; referências
-		      (setq refsdir "/media/paulo/syncthing/An&M/org/refs.org")
-       (add-to-list 'org-capture-templates
-		    '("r" "Referências" entry
-		      (file+headline refsdir "Capture") 
-		      "* %^{TITLE} \n[[%^{URL}][link]]\nDescription: %?" :empty-lines 1))
-     #+END_SRC
-**** Todos
-     #+BEGIN_SRC emacs-lisp 
-       (setq tasksdir "/media/paulo/syncthing/An&M/org/todos.org")
-       (add-to-list 'org-capture-templates
-		    '("t" "Task / To-do" entry
-		      (file+headline tasksdir "Afazeres") 
-		      "* TODO %^{Description}\n%?" :empty-lines 1))
+ ;;;; abrir o capture frame em uma nova janela
+ ;;;;;;;; atualmente não está sendo utilizado
+   (require 'noflet)
+   (setq inhibit-compacting-font-caches t)
+   (defun make-capture-frame ()
+     "Create a new frame and run org-capture."
+     (interactive)
+     (make-frame '((name . "capture")))
+     (select-frame-by-name "capture")
+     (delete-other-windows)
+     (noflet ((switch-to-buffer-other-window (buf) (switch-to-buffer buf)))
+       (org-capture)))
+   #+END_SRC
+***** Templates 
+      #+BEGIN_SRC emacs-lisp
+	(defun capture-report-data-file (path)
+	  (let ((name (read-string "Name: ")))
+	    (expand-file-name (format "%s-%s.org"
+				      (format-time-string "%Y-%m-%d")
+				      name) path)))
 
-       (add-to-list 'org-capture-templates
-		    '("w" "Weekly Review" entry
-		      (file+headline tasksdir "Afazeres") 
-		      (file "/media/paulo/syncthing/An&M/org/review_template.orgcaptmpl") :empty-lines 1))
+	 ;;;;;;;;; TODO: Refatorar o código abaixo para
+	 ;;;;;; diminuir a necessidade de definições
+	 ;;;;;; i.e.: usar "concat"
+	(setq writedir "/media/paulo/HDD_1/syncthing/org/writing.org"
+	      unidir "/media/paulo/HDD_1/syncthing/org/uni/uninotes.org"
+	      tccdir "/media/paulo/HDD_1/syncthing/org/tcc.org"
+	      journaldir "/media/paulo/HDD_1/syncthing/org/journaling.org"
+	      blogpostsdir "/media/paulo/HDD_CREATIVE_FILES/src/blog/posts/new.html"
+	      notesdir "/media/paulo/HDD_1/syncthing/org/notes.org"
+	      listsdir "/media/paulo/HDD_1/syncthing/org/lists.org" 
+	      tasksdir "/media/paulo/HDD_1/syncthing/org/todos.org"
+	      refsdir "/media/paulo/HDD_1/syncthing/org/refs.org"
+	      goalsdir "/media/paulo/HDD_1/syncthing/org/projetos.org")
 
-     #+END_SRC
-**** Goals 
-     #+BEGIN_SRC emacs-lisp
-       (setq goalsdir "/media/paulo/syncthing/An&M/org/projetos.org")
-       (add-to-list 'org-capture-templates
-		    '("g" "Goal / Project" entry
-		      (file+headline goalsdir "Capture") 
-		      "* %^{Title}\n:PROPERTIES:\n:GOAL: %^{Goal|Medium|Short|Long}\n:END:\nRecorded on %t\n:SMART:\n:SPECIFIC: %^{Specific description}\n:MEASURABLE: %^{How to measure progress in that goal?\n:ACTIVITY: %^{What activity needs to be done to accomplish that goal?}\n:RESOURCES: %^{What do we need to do it? Do we already have it?}\n:TIMEBOX: %^{How much time should I give to this task, and how often?}\n:END:\n:ACTIONS:\nLinks to actions that support this goal\n:END:\n" :empty-lines 1))
+	(setq org-capture-templates
+	      (quote (("n" "Note about a book" entry ;;;;; anotações sobre livros
+			 (file+olp notesdir "Capture" "Book notes") 
+			 "* %t \n:PROPERTIES:\n:LIVRO: %^{Livro}\n:PAGES: %^{Páginas}\n:END:\n %?"
+			 :empty-lines 1 :jump-to-captured t)
 
-     #+END_SRC
-**** Writing 
-     #+BEGIN_SRC emacs-lisp 
-       ;;; creative/productive writing
-       (setq writedir "/media/paulo/syncthing/An&M/org/writing.org")
-       (add-to-list 'org-capture-templates
-		       '("e" "creative/productive writing" entry
+			 ("w" "Notes about web page" entry
+			 (file+olp notesdir "Capture" "Web Pages") 
+			 "* %t - Página: %^{Página}\n:PROPERTIES:\nLink: %^{Link}\n:END:\n %?"
+			 :empty-lines 1 :jump-to-captured t)
+
+			 ("M" "Notas - miscelânia" entry
+			 (file+olp notesdir "Capture" "Misc") 
+			 "* %t - %^{Título}\n:PROPERTIES:\nRecursos: %^{Recursos}\n:END:\n %?"
+			 :empty-lines 1 :jump-to-captured t)
+
+		      ;;; anotações sobre artigos 
+		       ("a" "Note about an article" entry
+			 (file+olp notesdir "Capture" "Articles") 
+			 "* %t %^{Title} \n:PROPERTIES:\n:AUTHOR: %^{Author}\n:YEAR: %^{Year}\n:JOURNAL: %^{Journal}\n:NUMBER: %^{Number}\n:VOLUME: %^{Volume}\n:PAGES: %^{Pages}\n:ADDRESS:%^{Address}:END:\n%?"
+			 :empty-lines 1 :jump-to-captured t)
+	       
+			 ;;; livros para ler 
+		       ("b" "Books to read" entry
+			 (file+headline listsdir "Capture") 
+			 "* %^{Book title} :BOOK: %?\n Added: %t\n:INFO:\n:AUTHOR: %^{Author}\n:END:" :empty-lines 1)
+
+			 ;;; artigos para ler 
+		       ("A" "Articles to read" entry
+			 (file+headline listsdir "Capture") 
+			 "* %^{Article title} :ARTICLE: %?\n Added: %t\n:INFO:\n:AUTHOR: %^{Author}\n:LINK: %^{Link}\n:END:" :empty-lines 1)
+
+			 ;;; filmes 
+		       ("m" "Movies/series to watch" entry
+			 (file+headline listsdir "Capture") 
+			 "* %^{Movie title} %^{Kind of media|:MOVIE:|:SERIES:|:ANIMU:|:DOCUMENTARY:} %?\n Added: %t" :empty-lines 1)
+
+			 ;;; games
+		       ("g" "Games to play" entry
+			 (file+headline listsdir "Capture") 
+			 "* %^{Game title} :GAME: %?\n Added: %t" :empty-lines 1)
+
+			 ;;; referências
+		       ("r" "Referências" entry
+			 (file+headline refsdir "Capture") 
+			 "* %^{TITLE} \n[[%^{URL}][link]]\nDescription: %?" :empty-lines 1)
+
+		       ("t" "Task / To-do" entry
+			 (file+headline tasksdir "Afazeres") 
+			 "* TODO %^{Description}\n%?" :empty-lines 1)
+
+			 ;;; objetivos
+		       ("w" "Weekly Review" entry
+			 (file+headline tasksdir "Afazeres") 
+			 (file "/media/paulo/HDD_1/syncthing/org/templates/review_template.orgcaptmpl") :empty-lines 1)
+
+		       ("g" "Goal / Project" entry
+			 (file+headline goalsdir "Capture") 
+			 "* %^{Title}\n:PROPERTIES:\n:GOAL: %^{Goal|Medium|Short|Long}\n:END:\nRecorded on %t\n:SMART:\n:SPECIFIC: %^{Specific description}\n:MEASURABLE: %^{How to measure progress in that goal?\n:ACTIVITY: %^{What activity needs to be done to accomplish that goal?}\n:RESOURCES: %^{What do we need to do it? Do we already have it?}\n:TIMEBOX: %^{How much time should I give to this task, and how often?}\n:END:\n:ACTIONS:\nLinks to actions that support this goal\n:END:\n" :empty-lines 1)
+
+		       ;;; creative writing
+		       ("e" "creative/productive writing" entry
 			 (file+headline writedir "Capture") 
 			 "* %t - %^{Title}\nnote taken on %T\n %?"
-			 :empty-lines 1 :jump-to-captured t))
-
-       (setq tccdir "/media/paulo/syncthing/An&M/org/tcc.org")
-       (add-to-list 'org-capture-templates
-		       '("T" "Trabalho de conclusão de curso" entry
+			 :empty-lines 1 :jump-to-captured t)
+		      ;;; tcc 
+		       ("T" "Trabalho de conclusão de curso" entry
 			 (file+headline tccdir "Texto de fato") 
 			 "* %t - %^{Title}\nnote taken on %T\n %?"
-			 :empty-lines 1 :jump-to-captured t))
+			 :empty-lines 1 :jump-to-captured t)
 
-			 ;;; journaling
-       (setq journaldir "/media/paulo/syncthing/An&M/org/journaling.org")
-       (add-to-list 'org-capture-templates
-		    '("j" "Journal entry" entry
-		      (file+headline journaldir "Capture") 
-		      "* %t - %^{Title}\n:LOGBOOK:\n%?:END:"
-		      :empty-lines 1 :jump-to-captured t))
+		       ;; journaling  
+		       ("j" "Journal entry" entry
+			 (file+headline journaldir "Capture") 
+			 "* %t - %^{Title}\n:LOGBOOK:\n%?\n:END:"
+			 :empty-lines 1 :jump-to-captured t)
 
- 
-       (setq unidir "/media/paulo/syncthing/An&M/org/uni/uninotes.org")
-       (defun capture-report-data-file (path)
-	 (let ((name (read-string "Name: ")))
-	   (expand-file-name (format "%s-%s.org"
-				     (format-time-string "%Y-%m-%d")
-				     name) path)))
-				    
-       (add-to-list 'org-capture-templates
-		       '("u" "Uni notes" entry
+		       ;;; uni works
+		       ("u" "Uni notes" entry
 			 (file unidir) 
 			 "* %t - %^{Title}\n%?"
-			 :empty-lines 1 :jump-to-captured t))
+			 :empty-lines 1 :jump-to-captured t)
 
+		       ;;; new blogpost
+		       ("p" "Novo post" plain 
+			 (file blogpostsdir)
+			 "{% extends \"base.html\" %}\n{% block title %} %^{TITLE} {% endblock %}\n{% block content %}\n {% filter markdown %}\n%?\n{% endfilter %}\n{% endblock %}\n"
+			 :empty-lines 1 :jump-to-captured t))))
+      #+END_SRC
+*** Markdown
+    #+BEGIN_SRC emacs-lisp
+    (setq markdown-open-command "/usr/bin/grip")
+    #+END_SRC
+*** TeX 
+    #+BEGIN_SRC emacs-lisp
+    (add-to-list 'load-path "~/.emacs.d/lisp/auctex-12.2")
+    (load "auctex.el" nil t t)
 
-       (setq blogpostsdir "/media/paulo/HDD_CREATIVE_FILES/src/blog/posts/new.html")
-       (add-to-list 'org-capture-templates
-		    '("p" "Novo post" plain 
-		      (file blogpostsdir)
-		      "{% extends \"base.html\" %}\n{% block title %} %^{TITLE} {% endblock %}\n{% block content %}\n {% filter markdown %}\n%?\n{% endfilter %}\n{% endblock %}\n"
-		      :empty-lines 1 :jump-to-captured t))
-
-
-     #+END_SRC
-
-
-     #+RESULTS:
-     | (u Uni notes entry (file (capture-report-data-file unidir)) * %t - %^{Title} |
-
-** Markdown
-   #+BEGIN_SRC emacs-lisp
-   (setq markdown-open-command "/usr/bin/grip")
-   #+END_SRC
-** TeX 
-   #+BEGIN_SRC emacs-lisp
-   (add-to-list 'load-path "~/.emacs.d/lisp/auctex-12.2")
-   (load "auctex.el" nil t t)
+    ;; compilar para PDF automaticamente 
+    (setq TeX-PDF-mode t)
+    (setq TeX-command-force "LaTeX")
    
+    ;; setar o Atril como meu leitor de PDF principal 
+    (setq TeX-view-program-selection
+	 '((output-dvi "Atril")
+	   (output-pdf "Atril")
+	   (output-html "brave-browser")))
+    #+END_SRC
    
-   ;; compile to pdf automatically
-   (setq TeX-PDF-mode t)
-   (setq TeX-command-force "LaTeX")
-   
-   ;; set zathura as my main tex output
-   (setq TeX-view-program-selection
-	'((output-dvi "Atril")
-	  (output-pdf "Atril")
-	  (output-html "Firefox")))
-   #+END_SRC
-
-* Mode hooks
-#+BEGIN_SRC emacs-lisp
-
+** Hooks
+ #+BEGIN_SRC emacs-lisp
+  ;;;;; tirar os detalhes do dired, i.e., mostrar apenas 
+  ;;;;; o nome dos arquivos e diretórios
   (add-hook 'dired-mode-hook 'dired-hide-details-mode)
 
- (add-hook 'magit-mode-hook
-       (lambda ()
-        (local-set-key (kbd "M-a") 'magit-remote-add)))
+  (add-hook 'magit-mode-hook
+	(lambda ()
+         (local-set-key (kbd "M-a") 'magit-remote-add)))
 
-  (defun my-python-hooks ()
-    (hl-line-mode 1)
-    (jedi:setup))
+   (defun my-python-hooks ()
+     (hl-line-mode 1)
+     (jedi:setup))
+   (add-hook 'python-mode-hook 'my-python-hooks) 
 
-  (add-hook 'python-mode-hook 'my-python-hooks) 
+   ;;;; lisp em geral
+   (autoload 'enable-paredit-mode "paredit" t)
+   (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
+   (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
+   (add-hook 'ielm-mode-hook #'enable-paredit-mode)
+   (add-hook 'lisp-mode-hook #'enable-paredit-mode)
+   (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
 
-  (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
-  (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
-  (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
-  (add-hook 'ielm-mode-hook #'enable-paredit-mode)
-  (add-hook 'lisp-mode-hook #'enable-paredit-mode)
-  (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
+   (require 'web-mode)
+   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+   (add-to-list 'auto-mode-alist '("\\.php?\\'" . web-mode))
+   (add-hook 'web-mode-hook (lambda () (emmet-mode 1)))
+   (add-hook 'php-mode-hook (lambda () (web-mode 1)))
+   (add-hook 'html-mode-hook (lambda () (web-mode 1)))
+     
+   ;; C e C++
+   (defun c_hook ()
+      (electric-pair-mode 1) ;;;;; electric-pair-mode automatiza a inserção de "}"
+      (irony-mode 1))
 
-  (require 'web-mode)
-     (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-     (add-hook 'web-mode-hook (lambda () (emmet-mode 1)))
+   (add-hook 'c++-mode-hook 'c_hook) 
+   (add-hook 'c-mode-hook 'c_hook)
 
+   ;; java
+   (add-hook 'java-mode-hook (lambda ()
+			       (electric-pair-mode 1)))
+ #+END_SRC
+** Atalhos 
+ #+BEGIN_SRC emacs-lisp
+   (global-set-key (kbd "C-c w") 'web-mode-surround)
+   (global-set-key (kbd "<f5>") 'clone-indirect-buffer)
+   (global-set-key (kbd "<f9>") 'magit)
 
-  ;; c and c++
-  (defun c_hook ()
-    ;; enable irony mode (which I haven't quite learned yet) and automatic curly brackets setting
-     (electric-pair-mode 1)
-     (irony-mode 1))
+   (global-set-key (kbd "C-x C-b") 'ido-switch-buffer)
 
-  (add-hook 'c++-mode-hook 'c_hook) 
-  (add-hook 'c-mode-hook 'c_hook)
+   ;; paginar pelos buffers 
+   (global-set-key (kbd "M-b")   'buffer-flip-forward) 
+   (global-set-key (kbd "M-S-b") 'buffer-flip-backward)
 
-  ;; java
-  (add-hook 'java-mode-hook (lambda ()
-			      (electric-pair-mode 1)))
+   (global-set-key (kbd "M-f") 'other-frame)
+ ;  (global-set-key (kbd "<f6>") 'make-capture-frame)
+   (global-set-key (kbd "<f6>") 'org-capture)
+   (global-set-key (kbd "C-c s") 'org-sort)
+   (global-set-key (kbd "<f1>") 'org-agenda)
+  
+   (global-set-key (kbd "<f3>") 'my/copy-id-to-clipboard)
 
+ ;;; valida uma s-exp e a substitui pelo valor que ela retorna
+   (global-set-key (kbd "M-r") 'replace-last-sexp)
+ #+END_SRC
 
-#+END_SRC
-
-#+RESULTS:
-| lambda | nil | (electric-pair-mode 1) |
-
-* extension functions 
+* Funções extras 
+algumas funções extras, como para instalar múltiplos pacotes etc
+** Instalar e remover
 #+BEGIN_SRC emacs-lisp 
+  (defun installed? (pkg)
+    ;;; Checa se o pacote está instalado 
+    (if (eq (require pkg nil 'noerror) pkg) 't nil))
 
-(defun replace-last-sexp ()
-  (interactive)
-  (let ((value (eval (preceding-sexp))))
-    (kill-sexp -1)
-    (insert (format "%S" value))))
+  (defun install-multiple (pkg-list)
+    ;;; instala múltiplos pacotes de uma só vez 
+    (cond ((consp pkg-list) ;; if pkg-list is a cons  
+	   (while pkg-list
+	     (if (not (installed? (car pkg-list)))
+		 (progn
+		   (package-install (car pkg-list))
+		   (setq pkg-list (cdr pkg-list)))
+	       (setq pkg-list (cdr pkg-list )))))
+	  ((symbolp pkg-list) ;; if pkg-list is actually a single package
+	   (if (not (installed? pkg-list))
+	     (package-install pkg-list)))
+	  ('t ;; else return an error message
+	   (message "You should input a list of packages or a single quoted package"))))
 
-(defun installed? (pkg)
-  ;;; checks if PKG is installed. Returns t if it is, nil otherwise.
-  (if (eq (require pkg nil 'noerror) pkg) 't nil))
+  (defun apackage (pkg)
+    ;;; retorna o pacote em si (se ele está instalado) 
+    (car (cdr (assoc pkg package-alist))))
 
-(defun install-multiple (pkg-list)
-  ;;; install multiple packages at once
-  (cond ((consp pkg-list) ;; if pkg-list is a cons  
-	 (while pkg-list
-	   (if (not (installed? (car pkg-list)))
-	       (progn
-		 (package-install (car pkg-list))
-		 (setq pkg-list (cdr pkg-list)))
-	     (setq pkg-list (cdr pkg-list )))))
-	((symbolp pkg-list) ;; if pkg-list is actually a single package
-	 (if (not (installed? pkg-list))
-	   (package-install pkg-list)))
-	('t ;; else return an error message
-	 (message "You should input a list of packages or a single quoted package"))))
-
-(defun apackage (pkg)
-  ;;; returns actual package as it's found in package-alist 
-  (car (cdr (assoc pkg package-alist))))
-
-(defun delete-multiple (pkg-list)
-  ;;; delete multiple packages at once
-  (cond ((symbolp pkg-list)
-	 (if (installed? pkg-list)
-	     (package-delete (apackage pkg-list))
-	   nil))
-	 ((consp pkg-list)
-	  (while pkg-list
-	    (if (installed? (car pkg-list))
-		(progn
-		  (package-delete
-		   (apackage (car pkg-list)))
-		  (setq pkg-list (cdr pkg-list)))
-	      (setq pkg-list (cdr pkg-list)))))
-	 ('t nil)))
-
-(global-set-key (kbd "M-r") 'replace-last-sexp)
-;    (define-key tern-mode-keymap (kbd "M-.") nil)
-;    (define-key tern-mode-keymap (kbd "M-,") nil)
-
-
+  (defun delete-multiple (pkg-list)
+    ;;; deletar múltiplos pacotes 
+    (cond ((symbolp pkg-list)
+	   (if (installed? pkg-list)
+	       (package-delete (apackage pkg-list))
+	     nil))
+	   ((consp pkg-list)
+	    (while pkg-list
+	      (if (installed? (car pkg-list))
+		  (progn
+		    (package-delete
+		     (apackage (car pkg-list)))
+		    (setq pkg-list (cdr pkg-list)))
+		(setq pkg-list (cdr pkg-list)))))
+	   ('t nil)))
 #+END_SRC
 
-* Status report
+** Conveniências
+#+BEGIN_SRC emacs-lisp 
+  (defun replace-last-sexp ()
+    (interactive)
+    (let ((value (eval (preceding-sexp))))
+      (kill-sexp -1)
+      (insert (format "%S" value))))
+
+
+  ;;; gerar o id de uma org-entry e automaticamente copiar para a clipboard 
+  (defun my/copy-id-to-clipboard()  
+    (interactive)
+    (when (eq major-mode 'org-mode) ; do this only in org-mode buffers
+      (setq mytmpid (funcall 'org-id-get-create))
+      (kill-new mytmpid)
+      (message "Copied %s to killring (clipboard)" mytmpid)))
+#+END_SRC
+
+* Status 
+  narcisismo da minha parte
 #+BEGIN_SRC emacs-lisp 
 (defun display-startup-echo-area-message ()
   (message (format "hi, %s! Everything is working as expected. Good to see you." user-login-name)))
-
-#+END_SRC
-* Shortcuts
-#+BEGIN_SRC emacs-lisp
-
-  (global-set-key (kbd "C-c w") 'web-mode-surround)
-  (global-set-key (kbd "<f5>") 'clone-indirect-buffer)
-  (global-set-key (kbd "<f9>") 'magit)
-
-  (global-set-key (kbd "C-x C-b") 'ido-switch-buffer)
-
-  ;; transient keymap used once cycling starts
-  (global-set-key (kbd "M-b")   'buffer-flip-forward) 
-  (global-set-key (kbd "M-S-b") 'buffer-flip-backward)
-
-  (setq buffer-flip-skip-patterns 
-	'("^\\*Messages\\*"
-	  "^\\*Completions\\*"
-	  "^\\*Compile-Log\\*"
-	  "^\\*WoMan-Log\\*"
-	  "^\\*Scratch\\*$"))
-
 #+END_SRC
 
-#+RESULTS:
-| ^\*Messages\* | ^\*Completions\* | ^\*Compile-Log\* | ^\*WoMan-Log\* | ^\*Scratch\*$ |
