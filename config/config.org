@@ -70,6 +70,7 @@
  ;; consertar cedilha
  (global-set-key (kbd "ć") (lambda () (interactive) (insert "ç")))
  #+END_SRC
+<<<<<<< HEAD
 ** Aparência 
 *** Temas
  #+BEGIN_SRC emacs-lisp 
@@ -79,6 +80,16 @@
 	    ((and (>= hour 18) (<= hour 23)) (load-theme 'doom-dark+ t)))
  ;(hl-line-mode 1)
  (set-frame-parameter (selected-frame) 'alpha '(100 . 100))
+=======
+*** Calendar
+
+#+BEGIN_SRC emacs-lisp
+  (require 'org-gcal)
+  (setq gcal-envs (split-string (shell-command-to-string "/home/${USER}/.bin/getgcalvar") "\n")) 
+  (setq org-gcal-client-id (car (cdr gcal-envs)) ; client client id 
+	org-gcal-client-secret (car gcal-envs) ; client secret 
+	'(("pauloroberto.21s@gmail.com" . "/media/paulo/HDD_1/syncthing/org/gcalendar.org")))
+>>>>>>> 038aca5e8813180bfad91d2e81dad0eef1e9f85b
 #+END_SRC
 *** Menus, barras etc
 #+BEGIN_SRC emacs-lisp 
