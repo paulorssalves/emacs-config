@@ -1,5 +1,5 @@
 
-#+TITLE: Configurações
+#+TITLE: config.org 
 #+AUTHOR: Paulo R.S.S. Alves
 
 * Configurações 
