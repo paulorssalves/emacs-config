@@ -1,5 +1,5 @@
 
-#+TITLE: config.org 
+#+TITLE: Configurações
 #+AUTHOR: Paulo R.S.S. Alves
 
 * Configurações 
@@ -92,209 +92,191 @@
  (scroll-bar-mode -1)
  (show-paren-mode 1)
  #+END_SRC
+** Org mode
+*** Geral
+ #+BEGIN_SRC emacs-lisp  
+
+   (require 'ob-lilypond)
+   (require 'zen-mode)
+   (require 'org-mouse)
+
+   (setq org-todo-keywords '((sequence "TODO(t)" "FAIL(f)" "PAUSE(w)" "SOMEDAY(s)" "ENGAGED(e)" "|" "+REP(r)" "DONE(d)" "CANCELLED(c)")))
+   (setq org-todo-keyword-faces
+	 '(("TODO". "#ffbe57")
+	   ("+REP" . "#34a1eb")
+	   ("FAIL" . org-warning)
+	   ("CANCELLED" . "#524e45")
+	   ("PAUSE" . "#918e86")
+	   ("SOMEDAY" . "#93adab")
+	   ("ENGAGED" . "#9fcf9f")
+	   ("DONE" . "#8cdb84")))
+
+    (require 'org-bullets)
+    (add-hook 'org-mode-hook (progn (lambda  ()
+				      "Word wrapping enabled"
+				      (org-bullets-mode 1)
+				      (setq truncate-lines nil))))
+    (add-to-list 'org-file-apps '(directory . emacs))
+ #+END_SRC
+*** Publish
+    #+BEGIN_SRC emacs-lisp
+    ;;;; exportar para HTML com css do Twitter Bootstrap
+    ;;;; não é lá essas coisas
+    (require 'ox-twbs)
+    
+    ;;;; esse aqui parece mais interessante: 
+    ;;;; exportar para HTML
+    ;;;; sem as manias esquisitas que vem
+    ;;;; com o org mode padrão
+    (require 'ox-slimhtml)
+    #+END_SRC
+*** Agenda
+ #+BEGIN_SRC emacs-lisp
+	(require 'org-habit)
+	(setq org-habit-graph-column 100) 
+
+	(setq syncdir "/media/paulo/HDD_1/syncthing/org/")
+	(setq confdir "/home/paulo/.emacs.d/config/")
+
+	(setq agenda-files (list
+			    (concat syncdir "todos.org")
+			    (concat syncdir "gcalendar.org")))
+
+	(add-hook 'after-init-hook (lambda ()
+				     (progn 
+				       (org-babel-load-file (concat confdir "org-agenda-config.org"))
+				       (setq org-agenda-files agenda-files)
+				       ;;; refile
+				       (setq agenda-minus-ical (butlast org-agenda-files))
+				       (setq projetos (concat syncdir "projetos.org"))
+				       (setq org-refile-targets '((nil :maxlevel . 1)
+								  (agenda-minus-ical :maxlevel . 1)
+								  (projetos :maxlevel . 1))))))
+ #+END_SRC
+*** Calendar
+    [[https://github.com/myuhe/org-gcal.el][Org-gcal]] serve para sincronizar o meu google calendar com o org mode. 
+    O comando usado para pegar os valores das variáveis de ambiente para configurar o org-gcal é [[https://github.com/paulorssalves/useful-scripts/blob/master/getgcalvar][este]].
+#+BEGIN_SRC emacs-lisp
+  (require 'org-gcal)
+  (setq gcal-envs (split-string (shell-command-to-string "/home/${USER}/.bin/getgcalvar") "\n")) 
+  (setq org-gcal-client-id (car (cdr gcal-envs)) ; client client id 
+	org-gcal-client-secret (car gcal-envs) ; client secret 
+	'(("pauloroberto.21s@gmail.com" . "/media/paulo/HDD_1/syncthing/org/gcalendar.org")))
+#+END_SRC
+*** Org Capture 
+**** Setup
+     Configurando o org mode
+  #+BEGIN_SRC emacs-lisp 
+  (require 'org-capture)
+
+;;;; abrir o capture frame em uma nova janela
+;;;;;;;; atualmente não está sendo utilizado
+  (require 'noflet)
+  (setq inhibit-compacting-font-caches t)
+  (defun make-capture-frame ()
+    "Create a new frame and run org-capture."
+    (interactive)
+    (make-frame '((name . "capture")))
+    (select-frame-by-name "capture")
+    (delete-other-windows)
+    (noflet ((switch-to-buffer-other-window (buf) (switch-to-buffer buf)))
+      (org-capture)))
+  #+END_SRC
+**** Templates 
+     #+BEGIN_SRC emacs-lisp
+       (defun capture-report-data-file (path)
+	 (let ((name (read-string "Name: ")))
+	   (expand-file-name (format "%s-%s.org"
+				     (format-time-string "%Y-%m-%d")
+				     name) path)))
+
+       (setq orgdir "/media/paulo/HDD_1/syncthing/org/")
+       (setq blogpostsdir "/media/paulo/HDD_CREATIVE_FILES/src/blog/posts/new.html")
+
+       (setq org-capture-templates
+	     `(("t" "Task / To-do" entry ;; próximas ações
+		(file+headline ,(concat orgdir "todos.org") "Afazeres") 
+		"* TODO %^{Description}\n%?" :empty-lines 1)
+	
+	       ("g" "Goal / Project" entry ;; objetivos
+		(file+headline ,(concat orgdir "projetos.org") "Capture") 
+		"* %^{Title}\n:PROPERTIES:\n:GOAL: %^{Goal|Medium|Short|Long}\n:END:\nRecorded on %t\n:SMART:\n:SPECIFIC: %^{Specific description}\n:MEASURABLE: %^{How to measure progress in that goal?\n:ACTIVITY: %^{What activity needs to be done to accomplish that goal?}\n:RESOURCES: %^{What do we need to do it? Do we already have it?}\n:TIMEBOX: %^{How much time should I give to this task, and how often?}\n:END:\n:ACTIONS:\nLinks to actions that support this goal\n:END:\n" :empty-lines 1)
+
+	       ("n" "Notes")
+	       ("nb" "note about a book" entry ;;;;; anotações sobre livros
+		(file+olp ,(concat orgdir "notes.org") "capture" "book notes") 
+		"* %t \n:properties:\n:livro: %^{livro}\n:pages: %^{páginas}\n:end:\n %?"
+		:empty-lines 1 :jump-to-captured t)
+	
+	       ("nw" "notes about web page" entry ;; anotações sobre website
+		(file+olp ,(concat orgdir "notes.org") "capture" "web pages") 
+		      "* %t - página: %^{página}\n:properties:\nlink: %^{link}\n:end:\n %?"
+		      :empty-lines 1 :jump-to-captured t)
+	
+	       ("nm" "notas - miscelânia" entry ;;; anotações que não se encaixam em nenhum outro critério
+		(file+olp ,(concat orgdir "notes.org") "capture" "misc") 
+		"* %t - %^{título}\n:properties:\nrecursos: %^{recursos}\n:end:\n %?"
+		:empty-lines 1 :jump-to-captured t)
+	
+	       ("na" "note about an article" entry ;; anotações sobre artigos
+		(file+olp ,(concat orgdir "notes.org") "capture" "articles") 
+		"* %t %^{title} \n:properties:\n:author: %^{author}\n:year: %^{year}\n:journal: %^{journal}\n:number: %^{number}\n:volume: %^{volume}\n:pages: %^{pages}\n:address:%^{address}:end:\n%?" :empty-lines 1 :jump-to-captured t)
+	
+	       ("nu" "uni notes" entry ;;;; buffer para tarefas da faculdade
+		(file ,(concat orgdir "uni/uninotes.org")) 
+		"* %t - %^{title}\n%?"
+		:empty-lines 1 :jump-to-captured t)
+
+	       ("r" "Read") 
+	       ("rb" "books to read" entry ;;; books
+		(file+headline ,(concat orgdir "lists.org") "capture") 
+		"* %^{book title} :book: %?\n added: %t\n:info:\n:author: %^{author}\n:end:" :empty-lines 1)
+	
+	       ("ra" "articles to read" entry ;;; articles
+		(file+headline ,(concat orgdir "lists.org") "capture") 
+		"* %^{article title} :article: %?\n added: %t\n:info:\n:author: %^{author}\n:link: %^{link}\n:end:" :empty-lines 1)
+	
+	       ("c" "Consoom")
+	       ("cm" "movies/series to watch" entry ;; movies
+		      (file+headline ,(concat orgdir "lists.org") "capture") 
+		      "* %^{movie title} %^{kind of media|:movie:|:series:|:animu:|:documentary:} %?\n added: %t" :empty-lines 1)
+	
+	       ("cg" "games to play" entry ;; games
+		(file+headline ,(concat orgdir "lists.org") "capture") 
+		"* %^{game title} :game: %?\n added: %t" :empty-lines 1)
+
+	       ("w" "Write")
+	       ("we" "creative/productive writing" entry ;; escrita criativa ou produtiva
+		(file+headline ,(concat orgdir "writing.org") "Capture") 
+		"* %t - %^{Title}\nnote taken on %T\n %?"
+		:empty-lines 1 :jump-to-captured t) 
+	
+	       ("wt" "Trabalho de conclusão de curso" entry ;; tcc/thesis
+		(file+headline ,(concat orgdir "tcc.org") "Texto de fato") 
+		"* %t - %^{Title}\nnote taken on %T\n %?"
+		:empty-lines 1 :jump-to-captured t)
+	
+	       ("wj" "Journal entry" entry ;; journaling
+		(file+headline ,(concat orgdir "journaling.org") "Capture") 
+		"* %t - %^{Title}\n:LOGBOOK:\n%?\n:END:"
+		:empty-lines 1 :jump-to-captured t)
+	
+	       ("wp" "Novo post" plain ;; blogpost 
+		(file blogpostsdir)
+		"{% extends \"base.html\" %}\n{% block title %} %^{TITLE} {% endblock %}\n{% block content %}\n {% filter markdown %}\n%?\n{% endfilter %}\n{% endblock %}\n"
+		:empty-lines 1 :jump-to-captured t)
+
+	       ("R" "Referências" entry
+		(file+headline ,(concat orgdir "refs.org") "capture") 
+		"* %^{title} \n[[%^{url}][link]]\ndescription: %?" :empty-lines 1)
+
+	       ("W" "Weekly Review" entry ;; revisão semanal 
+		(file+headline ,(concat orgdir "todos.org") "Afazeres") 
+		(file "/media/paulo/HDD_1/syncthing/org/templates/review_template.orgcaptmpl") :empty-lines 1)))
+
+     #+END_SRC
 ** Linguages de marcação 
  Configurações diversas para diferentes linguades de marcação
-*** Org mode
-**** Geral
-  #+BEGIN_SRC emacs-lisp  
-
-    (require 'ob-lilypond)
-    (require 'zen-mode)
-    (require 'org-mouse)
-
-    (setq org-todo-keywords '((sequence "TODO(t)" "FAIL(f)" "PAUSE(w)" "SOMEDAY(s)" "ENGAGED(e)" "|" "+REP(r)" "DONE(d)" "CANCELLED(c)")))
-    (setq org-todo-keyword-faces
-	  '(("TODO". "#ffbe57")
-	    ("+REP" . "#34a1eb")
-	    ("FAIL" . org-warning)
-	    ("CANCELLED" . "#524e45")
-	    ("PAUSE" . "#918e86")
-	    ("SOMEDAY" . "#93adab")
-	    ("ENGAGED" . "#9fcf9f")
-	    ("DONE" . "#8cdb84")))
-
-     (require 'org-bullets)
-     (add-hook 'org-mode-hook (progn (lambda  ()
-				       "Word wrapping enabled"
-				       (org-bullets-mode 1)
-				       (setq truncate-lines nil))))
-     (add-to-list 'org-file-apps '(directory . emacs))
-  #+END_SRC
-**** Publish
-     #+BEGIN_SRC emacs-lisp
-     ;;;; exportar para HTML com css do Twitter Bootstrap
-     ;;;; não é lá essas coisas
-     (require 'ox-twbs)
-    
-     ;;;; esse aqui parece mais interessante: 
-     ;;;; exportar para HTML
-     ;;;; sem as manias esquisitas que vem
-     ;;;; com o org mode padrão
-     (require 'ox-slimhtml)
-     #+END_SRC
-**** Agenda
-  #+BEGIN_SRC emacs-lisp
-	 (require 'org-habit)
-	 (setq org-habit-graph-column 100) 
-
-	 (setq syncdir "/media/paulo/HDD_1/syncthing/org/")
-	 (setq confdir "/home/paulo/.emacs.d/config/")
-
-	 (setq agenda-files (list
-			     (concat syncdir "todos.org")
-			     (concat syncdir "gcalendar.org")))
-
-	 (add-hook 'after-init-hook (lambda ()
-				      (progn 
-					(org-babel-load-file (concat confdir "org-agenda-config.org"))
-					(setq org-agenda-files agenda-files)
-					;;; refile
-					(setq agenda-minus-ical (butlast org-agenda-files))
-					(setq projetos (concat syncdir "projetos.org"))
-					(setq org-refile-targets '((nil :maxlevel . 1)
-								   (agenda-minus-ical :maxlevel . 1)
-								   (projetos :maxlevel . 1))))))
-  #+END_SRC
-**** Calendar
- [[https://github.com/myuhe/org-gcal.el][Org-gcal]] serve para sincronizar o meu google calendar com o org mode. 
- O comando usado para pegar os valores das variáveis de ambiente para configurar o org-gcal é [[https://github.com/paulorssalves/useful-scripts/blob/master/getgcalvar][este]].
- #+BEGIN_SRC emacs-lisp
-   (require 'org-gcal)
-   (setq gcal-envs (split-string (shell-command-to-string "/home/${USER}/.bin/getgcalvar") "\n")) 
-   (setq org-gcal-client-id (car (cdr gcal-envs)) ; client client id 
-	 org-gcal-client-secret (car gcal-envs) ; client secret 
-	 '(("pauloroberto.21s@gmail.com" . "/media/paulo/HDD_1/syncthing/org/gcalendar.org")))
- #+END_SRC
-**** Org capture 
-***** Setup
-      Configurando o org-capture 
-   #+BEGIN_SRC emacs-lisp 
-   (require 'org-capture)
-
- ;;;; abrir o capture frame em uma nova janela
- ;;;;;;;; atualmente não está sendo utilizado
-   (require 'noflet)
-   (setq inhibit-compacting-font-caches t)
-   (defun make-capture-frame ()
-     "Create a new frame and run org-capture."
-     (interactive)
-     (make-frame '((name . "capture")))
-     (select-frame-by-name "capture")
-     (delete-other-windows)
-     (noflet ((switch-to-buffer-other-window (buf) (switch-to-buffer buf)))
-       (org-capture)))
-   #+END_SRC
-***** Templates 
-      #+BEGIN_SRC emacs-lisp
-	(defun capture-report-data-file (path)
-	  (let ((name (read-string "Name: ")))
-	    (expand-file-name (format "%s-%s.org"
-				      (format-time-string "%Y-%m-%d")
-				      name) path)))
-
-	 ;;;;;;;;; TODO: Refatorar o código abaixo para
-	 ;;;;;; diminuir a necessidade de definições
-	 ;;;;;; i.e.: usar "concat"
-	(setq writedir "/media/paulo/HDD_1/syncthing/org/writing.org"
-	      unidir "/media/paulo/HDD_1/syncthing/org/uni/uninotes.org"
-	      tccdir "/media/paulo/HDD_1/syncthing/org/tcc.org"
-	      journaldir "/media/paulo/HDD_1/syncthing/org/journaling.org"
-	      blogpostsdir "/media/paulo/HDD_CREATIVE_FILES/src/blog/posts/new.html"
-	      notesdir "/media/paulo/HDD_1/syncthing/org/notes.org"
-	      listsdir "/media/paulo/HDD_1/syncthing/org/lists.org" 
-	      tasksdir "/media/paulo/HDD_1/syncthing/org/todos.org"
-	      refsdir "/media/paulo/HDD_1/syncthing/org/refs.org"
-	      goalsdir "/media/paulo/HDD_1/syncthing/org/projetos.org")
-
-	(setq org-capture-templates
-	      (quote (("n" "Note about a book" entry ;;;;; anotações sobre livros
-			 (file+olp notesdir "Capture" "Book notes") 
-			 "* %t \n:PROPERTIES:\n:LIVRO: %^{Livro}\n:PAGES: %^{Páginas}\n:END:\n %?"
-			 :empty-lines 1 :jump-to-captured t)
-
-			 ("w" "Notes about web page" entry
-			 (file+olp notesdir "Capture" "Web Pages") 
-			 "* %t - Página: %^{Página}\n:PROPERTIES:\nLink: %^{Link}\n:END:\n %?"
-			 :empty-lines 1 :jump-to-captured t)
-
-			 ("M" "Notas - miscelânia" entry
-			 (file+olp notesdir "Capture" "Misc") 
-			 "* %t - %^{Título}\n:PROPERTIES:\nRecursos: %^{Recursos}\n:END:\n %?"
-			 :empty-lines 1 :jump-to-captured t)
-
-		      ;;; anotações sobre artigos 
-		       ("a" "Note about an article" entry
-			 (file+olp notesdir "Capture" "Articles") 
-			 "* %t %^{Title} \n:PROPERTIES:\n:AUTHOR: %^{Author}\n:YEAR: %^{Year}\n:JOURNAL: %^{Journal}\n:NUMBER: %^{Number}\n:VOLUME: %^{Volume}\n:PAGES: %^{Pages}\n:ADDRESS:%^{Address}:END:\n%?"
-			 :empty-lines 1 :jump-to-captured t)
-	       
-			 ;;; livros para ler 
-		       ("b" "Books to read" entry
-			 (file+headline listsdir "Capture") 
-			 "* %^{Book title} :BOOK: %?\n Added: %t\n:INFO:\n:AUTHOR: %^{Author}\n:END:" :empty-lines 1)
-
-			 ;;; artigos para ler 
-		       ("A" "Articles to read" entry
-			 (file+headline listsdir "Capture") 
-			 "* %^{Article title} :ARTICLE: %?\n Added: %t\n:INFO:\n:AUTHOR: %^{Author}\n:LINK: %^{Link}\n:END:" :empty-lines 1)
-
-			 ;;; filmes 
-		       ("m" "Movies/series to watch" entry
-			 (file+headline listsdir "Capture") 
-			 "* %^{Movie title} %^{Kind of media|:MOVIE:|:SERIES:|:ANIMU:|:DOCUMENTARY:} %?\n Added: %t" :empty-lines 1)
-
-			 ;;; games
-		       ("g" "Games to play" entry
-			 (file+headline listsdir "Capture") 
-			 "* %^{Game title} :GAME: %?\n Added: %t" :empty-lines 1)
-
-			 ;;; referências
-		       ("r" "Referências" entry
-			 (file+headline refsdir "Capture") 
-			 "* %^{TITLE} \n[[%^{URL}][link]]\nDescription: %?" :empty-lines 1)
-
-		       ("t" "Task / To-do" entry
-			 (file+headline tasksdir "Afazeres") 
-			 "* TODO %^{Description}\n%?" :empty-lines 1)
-
-			 ;;; objetivos
-		       ("w" "Weekly Review" entry
-			 (file+headline tasksdir "Afazeres") 
-			 (file "/media/paulo/HDD_1/syncthing/org/templates/review_template.orgcaptmpl") :empty-lines 1)
-
-		       ("g" "Goal / Project" entry
-			 (file+headline goalsdir "Capture") 
-			 "* %^{Title}\n:PROPERTIES:\n:GOAL: %^{Goal|Medium|Short|Long}\n:END:\nRecorded on %t\n:SMART:\n:SPECIFIC: %^{Specific description}\n:MEASURABLE: %^{How to measure progress in that goal?\n:ACTIVITY: %^{What activity needs to be done to accomplish that goal?}\n:RESOURCES: %^{What do we need to do it? Do we already have it?}\n:TIMEBOX: %^{How much time should I give to this task, and how often?}\n:END:\n:ACTIONS:\nLinks to actions that support this goal\n:END:\n" :empty-lines 1)
-
-		       ;;; creative writing
-		       ("e" "creative/productive writing" entry
-			 (file+headline writedir "Capture") 
-			 "* %t - %^{Title}\nnote taken on %T\n %?"
-			 :empty-lines 1 :jump-to-captured t)
-		      ;;; tcc 
-		       ("T" "Trabalho de conclusão de curso" entry
-			 (file+headline tccdir "Texto de fato") 
-			 "* %t - %^{Title}\nnote taken on %T\n %?"
-			 :empty-lines 1 :jump-to-captured t)
-
-		       ;; journaling  
-		       ("j" "Journal entry" entry
-			 (file+headline journaldir "Capture") 
-			 "* %t - %^{Title}\n:LOGBOOK:\n%?\n:END:"
-			 :empty-lines 1 :jump-to-captured t)
-
-		       ;;; uni works
-		       ("u" "Uni notes" entry
-			 (file unidir) 
-			 "* %t - %^{Title}\n%?"
-			 :empty-lines 1 :jump-to-captured t)
-
-		       ;;; new blogpost
-		       ("p" "Novo post" plain 
-			 (file blogpostsdir)
-			 "{% extends \"base.html\" %}\n{% block title %} %^{TITLE} {% endblock %}\n{% block content %}\n {% filter markdown %}\n%?\n{% endfilter %}\n{% endblock %}\n"
-			 :empty-lines 1 :jump-to-captured t))))
-      #+END_SRC
 *** Markdown
     #+BEGIN_SRC emacs-lisp
     (setq markdown-open-command "/usr/bin/grip")
@@ -449,3 +431,4 @@ algumas funções extras, como para instalar múltiplos pacotes etc
 (defun display-startup-echo-area-message ()
   (message (format "hi, %s! Everything is working as expected. Good to see you." user-login-name)))
 #+END_SRC
+
