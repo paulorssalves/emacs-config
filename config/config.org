@@ -73,9 +73,10 @@
 ** Aparência 
 *** Temas
  #+BEGIN_SRC emacs-lisp 
+ (load "~/.emacs.d/lisp/late-night-theme.el")
   (setq hour (string-to-number (format-time-string "%H")))
-  (cond ((and (< hour 5) (>= hour 0)) (load-theme 'doom-dark+ t))
-	    ((and (>= hour 5) (<= hour 17)) (load-theme 'doom-acario-light t))
+  (cond ((and (< hour 5) (>= hour 0)) (progn  (load-theme 'almost-mono-black t) (load-theme 'late-night t)))
+	    ((and (>= hour 5) (<= hour 17)) (load-theme 'almost-mono-white t))
 	    ((and (>= hour 18) (<= hour 23)) (load-theme 'doom-dark+ t)))
  ;(hl-line-mode 1)
  (set-frame-parameter (selected-frame) 'alpha '(100 . 100))
@@ -161,7 +162,7 @@
   (setq gcal-envs (split-string (shell-command-to-string "/home/${USER}/.bin/getgcalvar") "\n")) 
   (setq org-gcal-client-id (car (cdr gcal-envs)) ; client client id 
 	org-gcal-client-secret (car gcal-envs) ; client secret 
-	'(("pauloroberto.21s@gmail.com" . "/media/paulo/HDD_1/syncthing/org/gcalendar.org")))
+	org-gcal-file-alist '(("pauloroberto.21s@gmail.com" . "/media/paulo/HDD_1/syncthing/org/gcalendar.org")))
 #+END_SRC
 *** Org Capture 
 **** Setup
@@ -276,7 +277,7 @@
 
      #+END_SRC
 ** Linguages de marcação 
- Configurações diversas para diferentes linguades de marcação
+   Configurações diversas para diferentes linguades de marcação
 *** Markdown
     #+BEGIN_SRC emacs-lisp
     (setq markdown-open-command "/usr/bin/grip")
