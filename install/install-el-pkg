@@ -1,0 +1,3 @@
+#!/bin/sh 
+
+emacs --script ./install-required-packages.el

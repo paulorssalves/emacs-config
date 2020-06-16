@@ -1,0 +1,30 @@
+#!/bin/sh
+
+ORGDIR=/media/$USER/HDD_1/syncthing/org/archive
+CONFIGDIR=/home/$USER/.emacs.d/config/
+EXTRAPKGDIR=/home/$USER/.emacs.d/lisp/
+
+# create org files directory
+if [ ! -d $ORGDIR ]
+then 
+	mkdir --parents $ORGDIR
+else 
+	echo "ORGDIR already exists"
+fi
+
+
+# create emacs configfiles dir
+if [ ! -d $CONFIGDIR ]
+then
+	mkdir --parents $CONFIGDIR
+else
+	echo "CONFIGDIR already exists"
+fi
+
+# create emacs extra packages dir
+if [ ! -d $EXTRAPKGDIR ]
+then
+	mkdir --parents $EXTRAPKGDIR
+else
+	echo "EXTRAPKGDIR already exists"
+fi

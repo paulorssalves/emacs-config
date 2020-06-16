@@ -179,12 +179,3 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
-
-;;;; the packages below are the ones currently being used and thus necessary to be installed
-
-
-
-(setq '(darkroom dash-functional doom-themes emmet-mode evil-magit evil goto-chg helm helm-core impatient-mode htmlize jedi auto-complete jedi-core epc ctable concurrent latex-preview-pane magit git-commit markdown-mode memoize noflet oauth2 org-babel-eval-in-repl ess eval-in-repl ace-window avy org-bullets org-gcal alert log4e gntp orgbox ox-gfm ox-slimhtml ox-twbs paredit php-mode popup python-environment ranger request-deferred request deferred restart-emacs s simple-httpd smart-mode-line-powerline-theme smart-mode-line rich-minority powerline solarized-theme dash tablist tango-plus-theme transient undo-tree visual-fill-column web-mode with-editor async))
-
-
-

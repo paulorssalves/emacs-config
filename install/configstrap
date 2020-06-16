@@ -1,0 +1,14 @@
+#!/bin/sh
+
+CONFIGDIR=/home/$USER/.emacs.d/config/
+
+for file in ../config/*.org
+do 
+	if [ ! -e ${CONFIGDIR}${file} ]
+	then
+		echo "copying $file to $CONFIGDIR"
+		cp $file ${CONFIGDIR}${file}
+	else
+		echo "file $file already exists in target directoryh $CONFIGDIR"
+	fi
+done

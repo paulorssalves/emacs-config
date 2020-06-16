@@ -1,0 +1,20 @@
+#!/bin/sh
+
+LIST=(../.emacs
+	../.begin.org)
+
+for item in ${LIST[@]}
+do
+	if [ ! -e ~/$(basename $item) ]
+	then
+
+		echo "~/$(basename $item) doesn't exist" 
+		sleep 1
+		echo "creating..."
+		cp $item ~
+		sleep 1
+		echo "done!"
+	else
+		echo "there already exists a file such as $item in /home/$USER"
+	fi
+done

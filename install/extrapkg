@@ -1,0 +1,19 @@
+#!/bin/sh 
+
+EXTRAPKGDIR=/home/$USER/.emacs.d/lisp/
+
+for file in ../extrapkg/*.el
+do
+	if [ -e $EXTRAPKGDIR ]  
+	then
+		if [ ! -e ${EXTRAPKGDIR}$(basename $file) ] 
+		then 
+			cp $file ${EXTRAPKGDIR}$(basename $file)
+		else
+			echo "file $(basename $file) already exists in $EXTRAPKGDIR"
+		fi
+	else 
+		mkdir --parents $EXTRAPKGDIR
+		cp $file ${EXTRAPKGDIR}$(basename $file) 
+	fi
+done
