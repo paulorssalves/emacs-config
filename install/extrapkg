@@ -2,7 +2,7 @@
 
 EXTRAPKGDIR=/home/$USER/.emacs.d/lisp/
 
-for file in ../extrapkg/*.el
+for file in ./extrapkg/*.el
 do
 	if [ -e $EXTRAPKGDIR ]  
 	then

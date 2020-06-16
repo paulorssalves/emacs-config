@@ -2,7 +2,7 @@
 
 ORGDIR=/media/$USER/HDD_1/syncthing/org/
 
-for file in ../org_bases/*.org
+for file in ./org_bases/*.org
 	do
 		curr=$(basename $file)
 		if [ ! -e ${ORGDIR}${curr} ] 

@@ -1,3 +1,5 @@
+:;exec emacs -batch -l "$0" -f main "$@"
+
 ;;;;;;;; install-required-packages.el:
 ;;;;; automatiza o processo de instalação dos pacotes associados a
 ;;;;; essa configuração do emacs

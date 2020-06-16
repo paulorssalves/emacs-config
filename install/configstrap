@@ -1,14 +1,26 @@
 #!/bin/sh
 
 CONFIGDIR=/home/$USER/.emacs.d/config/
+ROOTDIR=/home/$USER/.emacs.d/
 
-for file in ../config/*.org
+for file in ./config/*.org
 do 
-	if [ ! -e ${CONFIGDIR}${file} ]
+	if [ ! -e ${CONFIGDIR}$(basename $file) ]
 	then
 		echo "copying $file to $CONFIGDIR"
-		cp $file ${CONFIGDIR}${file}
+		cp $file ${CONFIGDIR}$(basename $file)
 	else
-		echo "file $file already exists in target directoryh $CONFIGDIR"
+		echo "file $file already exists in target directory $CONFIGDIR"
 	fi
 done
+
+ABBREV=./abbrev_defs
+
+if [ ! -e ${ROOTDIR}$(basename $ABBREV) ]
+then
+	echo "copying $ABBREV to $ROOTDIR"
+	cp $ABBREV ${ROOTDIR}$(basename $ABBREV) 
+else
+	echo "$ABBREV already exists in $ROOTDIR"
+fi
+	
