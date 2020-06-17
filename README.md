@@ -7,7 +7,8 @@ Para que funcione integralmente é necessário apontar os endereços de cada arq
 
 ## dependências
 - Emacs
-	- apenas isso. Os pacotes usados serao instalados pelos scripts envolvidos no Makefile.
+	- apenas isso. Os pacotes usados serão instalados pelos scripts envolvidos no Makefile.
+
 ## pacotes usados
 
 Estão listados na variável ``dependencies`` dentro de install/install-required-packages.el
@@ -21,12 +22,11 @@ Além destes, também é usado o late-night-theme, que está na pasta "extra".
 
 ## Instalacao
 - make safe 
-	- instala o emacs na configuracao aqui disposta mas _sem_ criar os arquivos .org manipulados pelo `./install/orgmove`.
-	- E' mais seguro 
+	- instala o emacs na configuraçâo aqui disposta mas _sem_ criar os arquivos .org manipulados pelo `./install/orgmove`;
+	- É mais seguro. 
 
 - make fast
 	- instala tudo *e* os arquivos manipulados por `./install/orgmove`.
 
 ## TO-DOs
-- Ajustar a formatacao deste README.md
-- Promover a compilacao do $USER em .begin.org no lugar de um nome estaticamente inserido. 
+- Promover a compilação do $USER em .begin.org no lugar de um nome estaticamente inserido. 
