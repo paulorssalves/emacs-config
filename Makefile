@@ -1,5 +1,6 @@
 
-CONFIGFILES = ./install/configstrap ./install/extrapkg
+CONFIGFILES = ./install/configstrap 
+EXTRA=./install/extrapkg
 BOOTSTART=./install/bootstart
 DIRCREATE=./install/dircreate
 ORGMOVE=./install/orgmove
@@ -13,6 +14,7 @@ setup_directories:
 
 setup_config: setup_directories
 	sh $(CONFIGFILES)
+	sh $(EXTRA)
 
 setup_startfile: setup_config
 	sh $(BOOTSTART) 
