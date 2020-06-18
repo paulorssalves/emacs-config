@@ -17,7 +17,7 @@ setup_config: setup_directories
 	sh $(EXTRA)
 
 setup_startfile: setup_config
-	sh $(BOOTSTART) 
+	bash $(BOOTSTART) # used a little bashism in this one 
 
 setup_org_environment: setup_startfile 
 	sh $(ORGMOVE) 
