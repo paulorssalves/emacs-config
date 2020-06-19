@@ -73,13 +73,18 @@
 ** Aparência 
 *** Temas
  #+BEGIN_SRC emacs-lisp 
- (load "~/.emacs.d/lisp/late-night-theme.el")
-  (setq hour (string-to-number (format-time-string "%H")))
-  (cond ((and (< hour 5) (>= hour 0)) (progn  (load-theme 'almost-mono-black t) (load-theme 'late-night t)))
-	    ((and (>= hour 5) (<= hour 17)) (load-theme 'almost-mono-white t))
-	    ((and (>= hour 18) (<= hour 23)) (load-theme 'doom-dark+ t)))
- ;(hl-line-mode 1)
- (set-frame-parameter (selected-frame) 'alpha '(100 . 100))
+   (load "~/.emacs.d/lisp/late-night-theme.el")
+    (setq hour (string-to-number (format-time-string "%H")))
+   (cond ((and (< hour 5) (>= hour 0)) (progn  (load-theme 'almost-mono-black t)
+					       (load-theme 'late-night t)))
+	      ((and (>= hour 5) (<= hour 17)) (progn (load-theme 'almost-mono-white t)
+						     (load-theme 'leuven)
+						     (disable-theme 'leuven))) ;;; this is done in order to save change the 
+						     ;;;;color of the cursor (because it is invisible under 
+						     ;;;the almost-mono-white theme). 
+	      ((and (>= hour 18) (<= hour 23)) (load-theme 'doom-dark+ t)))
+   ;(hl-line-mode 1)
+   (set-frame-parameter (selected-frame) 'alpha '(100 . 100))
 #+END_SRC
 *** Menus, barras etc
 #+BEGIN_SRC emacs-lisp 
@@ -101,7 +106,7 @@
    (require 'zen-mode)
    (require 'org-mouse)
 
-   (setq org-todo-keywords '((sequence "TODO(t)" "FAIL(f)" "PAUSE(w)" "SOMEDAY(s)" "ENGAGED(e)" "|" "+REP(r)" "DONE(d)" "CANCELLED(c)")))
+   (setq org-todo-keywords '((sequence "TODO(t)" "FAIL(f)" "PAUSE(w)" "SOMEDAY(s)" "ENGAGED(e)" "|" "+REP(r)" "DONE(d)" "CANCELED(c)")))
    (setq org-todo-keyword-faces
 	 '(("TODO". "#ffbe57")
 	   ("+REP" . "#34a1eb")

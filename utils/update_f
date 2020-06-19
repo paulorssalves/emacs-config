@@ -1,0 +1,20 @@
+#!/bin/bash
+
+REPODIR=..
+EMACSDIR=/home/$USER/.emacs.d/
+
+FILES=( ${REPODIR}/config/config.org
+	${REPODIR}/config/org-agenda-config.org
+	${REPODIR}/abbrev_defs ) 
+
+for item in ${FILES[@]} 
+do
+    if [[ "$item" == *"config"* ]]  
+    then
+	cp --verbose ${EMACSDIR}config/$(basename $item) $item 
+    else
+	cp --verbose ${EMACSDIR}$(basename $item) $item 
+    fi
+done
+
+    

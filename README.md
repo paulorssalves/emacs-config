@@ -30,3 +30,5 @@ Além destes, também é usado o late-night-theme, que está na pasta "extra".
 
 ## TO-DOs
 - Promover a compilação do $USER em .begin.org no lugar de um nome estaticamente inserido. 
+- para o script `utils/update_f` checar qual arquivo foi modificado por último para decidir qual será sobrescrito em vez de meramente usar um cp --verbose 
+  
