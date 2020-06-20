@@ -7,14 +7,62 @@ FILES=( ${REPODIR}/config/config.org
 	${REPODIR}/config/org-agenda-config.org
 	${REPODIR}/abbrev_defs ) 
 
-for item in ${FILES[@]} 
-do
-    if [[ "$item" == *"config"* ]]  
-    then
-	cp --verbose ${EMACSDIR}config/$(basename $item) $item 
+for item in ${FILES[@]}; do
+
+    # para a leitura
+    REMOTEFILE=$item
+    BASEFILE=$(basename $item)
+
+    if [[ "$item" == *"config"* ]]; then
+	LOCALFILE_L=${EMACSDIR}config/$(basename $item)
+
+	diff -s -y --color=always $LOCALFILE_L $REMOTEFILE
+
+	while true; do
+	    echo 'Atualizar o $BASEFILE local ou o remoto (deste repositório)?' 
+	    read -p "[L=local/R=remoto]: " ANSWER 
+	    ANSWER_S=${ANSWER:0:1}
+
+	    if [[ $( echo $ANSWER_S | awk '{print tolower($0)}' ) ==  "r" ]]; then 
+		echo "atualizando $BASEFILE deste repositório..."; sleep 1
+		cp --verbose $LOCALFILE_L $REMOTEFILE # update remote
+		break
+
+	    elif [[ $( echo $ANSWER_S | awk '{print tolower($0)}' ) == "l" ]]; then
+		echo "atualizando $BASEFILE local..."; sleep 1
+		cp --verbose $REMOTEFILE $LOCALFILE_L # update local 
+		break
+
+	    else
+		echo "Não é uma resposta válida." 
+		continue
+	    fi
+	done
     else
-	cp --verbose ${EMACSDIR}$(basename $item) $item 
+	LOCALFILE_L=${EMACSDIR}$(basename $item)
+	diff -s -y --color=always $LOCALFILE_L $REMOTEFILE
+
+	while true ; do
+	    echo 'Atualizar o $BASEFILE local ou o remoto (deste repositório)?' 
+	    read -p "[L=local/R=remoto]: " ANSWER 
+	    ANSWER_S=${ANSWER:0:1}
+
+	    if [[ $( echo $ANSWER_S | awk '{print tolower($0)}' ) ==  "r" ]]; then 
+		echo "atualizando $BASEFILE deste repositório..."; sleep 1
+		cp --verbose $LOCALFILE_L $REMOTEFILE # update remote
+		break
+
+	    elif [[ $( echo $ANSWER_S | awk '{print tolower($0)}' ) == "l" ]]; then
+		echo "atualizando $BASEFILE local..."; sleep 1
+		cp --verbose $REMOTEFILE $LOCALFILE_L # update local 
+		break
+
+	    else
+		echo "Não é uma resposta válida." 
+		continue
+	    fi
+	done
     fi
 done
 
-    
+echo "Done. Quitting..." ; sleep 1
