@@ -26,28 +26,29 @@ for item in ${FILES[@]}; do
 	    read -p "[L=local/R=remoto/P=pular/C=cancelar]: " ANSWER 
 	    ANSWER_S=${ANSWER:0:1}
 
-	    if [[ $( echo $ANSWER_S | awk '{print tolower($0)}' ) ==  "r" ]]; then 
-		echo "atualizando $BASEFILE deste repositório..."; 
-		cp --verbose $LOCALFILE_L $REMOTEFILE # update remote
-		break
+	    case $( echo $ANSWER_S | awk '{print tolower($0)}' ) in 
 
-	    elif [[ $( echo $ANSWER_S | awk '{print tolower($0)}' ) == "l" ]]; then
-		echo "atualizando $BASEFILE local..."; 
-		cp --verbose $REMOTEFILE $LOCALFILE_L # update local 
-		break
+		"r" )
+		    printf "atualizando $BASEFILE deste repositório...\n\n"; 
+		    cp --verbose $LOCALFILE_L $REMOTEFILE # update remote
+		    break ;;
 
-	    elif [[ $( echo $ANSWER_S | awk '{print tolower($0)}' ) == "p" ]]; then
-		echo "pulando este..."
-		break
+		"l")
+		    printf "atualizando $BASEFILE local...\n\n";  
+		    cp --verbose $REMOTEFILE $LOCALFILE_L # update local 
+		    break ;;
 
-	    elif [[ $( echo $ANSWER_S | awk '{print tolower($0)}' ) == "c" ]]; then
-		echo "cancelando..." ; sleep 1
-		exit 1
+		"p")
+		    printf "pulando este...\n\n"
+		    break ;;
 
-	    else
-		printf "\n"; echo "${bold}Não é uma resposta válida.${normal}" 
-		continue
-	    fi
+		"c")
+		    printf "cancelando...\n\n" ; sleep 1
+		    exit 1 ;;
+		*)
+		    printf "\n${bold}Não é uma resposta válida.${normal}\n" 
+		    continue ;;
+	    esac
 	done
     else
 	LOCALFILE_L=${EMACSDIR}$(basename $item)
@@ -58,30 +59,31 @@ for item in ${FILES[@]}; do
 	    read -p "[L=local/R=remoto/P=pular/Outro=cancelar]: " ANSWER 
 	    ANSWER_S=${ANSWER:0:1}
 
-	    if [[ $( echo $ANSWER_S | awk '{print tolower($0)}' ) ==  "r" ]]; then 
-		echo "atualizando $BASEFILE deste repositório..."; 
-		cp --verbose $LOCALFILE_L $REMOTEFILE # update remote
-		break
+	    case $( echo $ANSWER_S | awk '{print tolower($0)}' ) in 
+		"r")
+		    printf "atualizando $BASEFILE deste repositório...\n"; 
+		    cp --verbose $LOCALFILE_L $REMOTEFILE # update remote
+		    break ;;
 
-	    elif [[ $( echo $ANSWER_S | awk '{print tolower($0)}' ) == "l" ]]; then
-		echo "atualizando $BASEFILE local...";
-		cp --verbose $REMOTEFILE $LOCALFILE_L # update local 
-		break
+		"l")
+		    printf "atualizando $BASEFILE local...\n";
+		    cp --verbose $REMOTEFILE $LOCALFILE_L # update local 
+		    break ;;
 
-	    elif [[ $( echo $ANSWER_S | awk '{print tolower($0)}' ) == "p" ]]; then
-		echo "pulando este..."
-		break
+		"p")
+		    printf "pulando este...\n"
+		    break ;;
 
-	    elif [[ $( echo $ANSWER_S | awk '{print tolower($0)}' ) == "c" ]]; then
-		echo "cancelando..." ; sleep 1
-		exit 1
+		"c")
+		    printf "cancelando...\n" ; sleep 1
+		    exit 1 ;;
 
-	    else
-		printf "\n"; echo "${bold}Não é uma resposta válida.${normal}" 
-		continue
-	    fi
+		*)
+		    printf "\n${bold}Não é uma resposta válida.${normal}\n" 
+		    continue ;;
+	    esac 
 	done
     fi
 done
 
-echo "Done. Quitting..." ; sleep 1
+echo "Terminado..." ; sleep 1
