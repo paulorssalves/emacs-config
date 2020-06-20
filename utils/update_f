@@ -20,6 +20,7 @@ for item in ${FILES[@]}; do
 	LOCALFILE_L=${EMACSDIR}config/$(basename $item)
 
 	diff -s --color=always $LOCALFILE_L $REMOTEFILE
+	printf "Lembrete: Linhas iniciando com '<' vem de $REMOTEFILE (remoto)\nao passo em que as inicam com '>' vem de $LOCALFILE_L (local)"
 
 	while true; do
 	    echo "Atualizar o $BASEFILE ${bold}local${normal} ou o ${bold}remoto${normal} (deste repositório)?" 

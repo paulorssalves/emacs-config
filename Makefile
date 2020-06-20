@@ -24,7 +24,7 @@ setup_org_environment: setup_startfile
 
 # this will output an error due to the fact that running a
 # headless instance of emacs won't allow it to
-# compile a .elc file
+# compile a .elc file (or so I believe that to be the case)
 install_packages: setup_startfile
 	sh $(ELPKG) 
 
