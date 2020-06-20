@@ -32,6 +32,6 @@
 	 (message "You should input a list of packages or a single quoted package"))))
 
 
-(setq dependencies '(evil paredit noflet web-mode org-bullets ox-twbs ox-slimhtml buffer-flip evil-magit magit zen-mode org-gcal almost-mono-themes doom-themes auctex))
+(setq dependencies '(evil paredit noflet web-mode org-bullets ox-twbs ox-slimhtml buffer-flip evil-magit magit org-gcal almost-mono-themes doom-themes auctex))
 
 (install-multiple dependencies)
