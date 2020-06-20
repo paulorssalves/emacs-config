@@ -7,8 +7,30 @@ FILES=( ${REPODIR}/config/config.org
 	${REPODIR}/config/org-agenda-config.org
 	${REPODIR}/abbrev_defs ) 
 
+# bold and normal type
 bold=$(tput bold)
 normal=$(tput sgr0)
+
+areyousure() {
+    # function to check whether or not the user will replace the files
+    TRUE=0
+    FALSE=1
+    while true; do
+	read -p "Você está certo disso? [S/N] " query
+	case $( echo ${query:0:1} | awk '{print tolower ($0)}') in
+	    "s")
+		answer=$TRUE
+		break;;
+	    "n")
+		answer=$FALSE
+		break;;
+	    *)
+		printf "Input inválido\n"
+		continue;;
+	esac
+    done
+    return $answer
+}
 
 for item in ${FILES[@]}; do
 
@@ -30,13 +52,28 @@ for item in ${FILES[@]}; do
 	    case $( echo $ANSWER_S | awk '{print tolower($0)}' ) in 
 
 		"r" )
-		    printf "atualizando $BASEFILE deste repositório...\n\n"; 
-		    cp --verbose $LOCALFILE_L $REMOTEFILE # update remote
+		    areyousure
+		    a=$?
+		    if [[ $a == 0 ]] ; then
+			echo "Entendido. Saindo..."; sleep 1
+			exit 1 ;
+		    elif [[ $a == 1 ]] ; then
+	
+			printf "atualizando $BASEFILE deste repositório...\n\n"; 
+			cp --verbose $LOCALFILE_L $REMOTEFILE # update remote
+		    fi
 		    break ;;
 
 		"l")
-		    printf "atualizando $BASEFILE local...\n\n";  
-		    cp --verbose $REMOTEFILE $LOCALFILE_L # update local 
+		    areyousure
+		    a=$?
+		    if [[ $a == 0 ]] ; then
+			echo "Entendido. Saindo..."; sleep 1
+			exit 1 ;
+		    elif [[ $a == 1 ]] ; then
+			printf "atualizando $BASEFILE local...\n\n";  
+			cp --verbose $REMOTEFILE $LOCALFILE_L # update local 
+		    fi
 		    break ;;
 
 		"p")
@@ -62,13 +99,26 @@ for item in ${FILES[@]}; do
 
 	    case $( echo $ANSWER_S | awk '{print tolower($0)}' ) in 
 		"r")
-		    printf "atualizando $BASEFILE deste repositório...\n"; 
-		    cp --verbose $LOCALFILE_L $REMOTEFILE # update remote
+		    areyousure
+		    a=$?
+		    if [[ $a == 0 ]] ; then
+			echo "Entendido. Saindo..."; sleep 1
+			exit 1 ;
+		    elif [[ $a == 1 ]] ; then
+			printf "atualizando $BASEFILE deste repositório...\n"; 
+			cp --verbose $LOCALFILE_L $REMOTEFILE # update remote
+		    fi
 		    break ;;
-
 		"l")
-		    printf "atualizando $BASEFILE local...\n";
-		    cp --verbose $REMOTEFILE $LOCALFILE_L # update local 
+		    areyousure
+		    a=$?
+		    if [[ $a == 0 ]] ; then
+			echo "Entendido. Saindo..."; sleep 1
+			exit 1 ;
+		    elif [[ $a == 1 ]] ; then
+			printf "atualizando $BASEFILE local...\n";
+			cp --verbose $REMOTEFILE $LOCALFILE_L # update local 
+		    fi
 		    break ;;
 
 		"p")
