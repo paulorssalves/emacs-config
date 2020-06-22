@@ -64,6 +64,19 @@
    (visual-line-mode)
  #+END_SRC
 
+ Uma forma de rodar o ansi-term sem um prompt para perguntar qual shell eu usarei
+ #+BEGIN_SRC emacs-lisp
+   (defun promptless-term ()
+   (interactive)
+     (set-buffer (make-term "terminal" "/bin/bash"))
+     (term-mode)
+     (term-char-mode)
+     (switch-to-buffer-other-window "*terminal*"))
+ #+END_SRC
+
+ #+RESULTS:
+ : promptless-term
+
  Consertar um pequeno problema de localização
  #+BEGIN_SRC emacs-lisp
 
@@ -353,10 +366,16 @@
    (global-set-key (kbd "<f1>") 'org-agenda)
   
    (global-set-key (kbd "<f3>") 'my/copy-id-to-clipboard)
+   (global-set-key (kbd "<f8>") 'org-sidebar-tree)
+   (global-set-key (kbd "C-M-x t") 'promptless-term)
 
  ;;; valida uma s-exp e a substitui pelo valor que ela retorna
    (global-set-key (kbd "M-r") 'replace-last-sexp)
  #+END_SRC
+
+ #+RESULTS:
+ : replace-last-sexp
+
 * Aparência 
 *** Temas
 
