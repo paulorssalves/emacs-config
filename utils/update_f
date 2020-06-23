@@ -42,7 +42,7 @@ for item in ${FILES[@]}; do
 	LOCALFILE_L=${EMACSDIR}config/$(basename $item)
 
 	diff -s --color=always $LOCALFILE_L $REMOTEFILE
-	printf "\n${bold}Lembrete:\n${normal}Linhas iniciando com '>' vem de \"$REMOTEFILE\" (remoto)\nao passo em que as inicam com '<' vem de \"$LOCALFILE_L\" (local)\n\n"
+	printf "\n${bold}Lembrete:\n${normal}Linhas iniciando com '>' vem de \"$REMOTEFILE\" (remoto)\nao passo em que as iniciam com '<' vem de \"$LOCALFILE_L\" (local)\n\n"
 
 	while true; do
 	    printf "Qual deve ser atualizado: \"$LOCALFILE_L\" (${bold}local${normal}) ou \"$REMOTEFILE\" (${bold}remoto${normal})?\n${bold}Atenção: O selecionado será sobrescrito pelo outro.${normal}\n" 

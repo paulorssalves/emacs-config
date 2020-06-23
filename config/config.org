@@ -74,8 +74,10 @@
      (switch-to-buffer-other-window "*terminal*"))
  #+END_SRC
 
- #+RESULTS:
- : promptless-term
+ ispell: spellchecker
+ #+BEGIN_SRC emacs-lisp
+ (setq ispell-dictionary "brasileiro")
+ #+END_SRC
 
  Consertar um pequeno problema de localização
  #+BEGIN_SRC emacs-lisp
@@ -367,14 +369,11 @@
   
    (global-set-key (kbd "<f3>") 'my/copy-id-to-clipboard)
    (global-set-key (kbd "<f8>") 'org-sidebar-tree)
-   (global-set-key (kbd "C-M-x t") 'promptless-term)
+   (global-set-key (kbd "<f2>") 'promptless-term)
 
  ;;; valida uma s-exp e a substitui pelo valor que ela retorna
    (global-set-key (kbd "M-r") 'replace-last-sexp)
  #+END_SRC
-
- #+RESULTS:
- : replace-last-sexp
 
 * Aparência 
 *** Temas

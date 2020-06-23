@@ -1,10 +1,12 @@
 
-CONFIGFILES = ./install/configstrap 
-EXTRA=./install/extrapkg
-BOOTSTART=./install/bootstart
-DIRCREATE=./install/dircreate
-ORGMOVE=./install/orgmove
-ELPKG=./install/install-required-packages.el
+INSTALLDIR=./install/
+CONFIGFILES = ${INSTALLDIR}configstrap 
+EXTRA=${INSTALLDIR}extrapkg
+BOOTSTART=${INSTALLDIR}bootstart
+DIRCREATE=${INSTALLDIR}dircreate
+ORGMOVE=${INSTALLDIR}orgmove
+ELPKG=${INSTALLDIR}install-required-packages.el
+DICT=${INSTALLDIR}download-extra.sh
 
 safe: install_packages 
 fast: setup_org_environment install_packages 
@@ -28,4 +30,7 @@ setup_org_environment: setup_startfile
 install_packages: setup_startfile
 	sh $(ELPKG) 
 
-
+# este privilégios de SUDOER
+# dependências: ispell 
+download_dictionary: 
+	sh $(DICT) 
