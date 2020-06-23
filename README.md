@@ -3,7 +3,11 @@
 Essa é a minha configuração do emacs.
 A configuração está disposta em um arquivo "config.org".
 
-Para que funcione integralmente é necessário apontar os endereços de cada arquivo usado em "begin.org", bem como apontar o endereço de "config.org" no arquivo .emacs (ou init.el equivalente).
+Eu uso para... tudo: para escrever trabalhos da faculdade, documentos, histórias; para escrever shellscripts, pequenos programas; para estudar estatística, editar arquivos .org e .tex. Acho que como quase todo mundo que usa o Emacs, eu cada vez mais vivo dentro do Emacs. O próximo passo é aprender a gerenciar email dentro do Emacs.
+
+Para que esta build funcione totalmente é necessário apontar os endereços de cada arquivo usado em "begin.org", bem como apontar o endereço de "config.org" no arquivo .emacs (ou init.el equivalente).
+
+O arquivo .begin.org ainda não está devidamente configurado pelos scripts aqui presentes.
 
 ## dependências
 - Emacs
@@ -27,6 +31,11 @@ Além destes, também é usado o [late-night-theme](https://gist.github.com/late
 
 - make fast
 	- instala tudo *e* os arquivos manipulados por `./install/orgmove`.
+
+- make download_dictionary -- 
+	este eu mantive de fora dos outros comandos de instalação porque ele é mais supérfluo, bem como requer maior confiança. Sugiro que cheque o conteúdo de `./install/download-extra.sh`.
+	- caso você queira instalar o spellchecker. 
+	- É necessário instalar o pacote `ispell` com o seu gerenciador de pacotes para tornar esta etapa útil. 
 
 ## TO-DOs
 - Promover a compilação do $USER em .begin.org no lugar de um nome estaticamente inserido. 
