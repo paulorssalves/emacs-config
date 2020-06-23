@@ -15,7 +15,7 @@ wget --verbose -P $INSTALLDIR https://www.ime.usp.br/~ueda/br.ispell/br.ispell-2
 printf "\ndescompactando...\n\n"
 
 TARFILE=br.ispell-2.4.tar.gz
-tar xvf ${INSTALLDIR}$TARFILE
+tar xvf ${INSTALLDIR}$TARFILE -C ${INSTALLDIR} 
 
 printf "\nColoque sua senha (sudo) para instalar o dicionário ispell em pt-br:\n"
 
