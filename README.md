@@ -24,7 +24,10 @@ Além destes, também é usado o [late-night-theme](https://gist.github.com/late
 	- Não testei isso ainda, mas acho que vale a advertência. 
 	- É preferível, portanto, sincronizar pelo Syncthing em vez de usar o ``orgmove``. 
 
-## Instalaçâo
+- Para criar os diretórios para o uso dos orgfiles provavelmente será necessário criar a pasta com `sudo mkdir -p /media/USUARIO_ATUAL`. O valor de USUARIO_ATUAL deve ser o mesmo que é retornado por `echo $USER` no terminal. 
+  - deverá então ser necessário alterar o proprietário desta pasta com `sudo chown -R USUARIO_ATUAL /media/USUARIO_ATUAL`. Tal como acima, o valor de USUARIO_ATUAL deverá ser o mesmo retornado por `echo $USER` no terminal.
+
+## Instalação
 - make safe 
 	- instala o emacs na configuraçâo aqui disposta mas _sem_ criar os arquivos .org manipulados pelo `./install/orgmove`;
 	- É mais seguro. 
