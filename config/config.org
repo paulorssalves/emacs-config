@@ -17,25 +17,39 @@
 
  Promover algumas mudanças dependendo de qual sistema operacional eu estou usando
  #+BEGIN_SRC emacs-lisp 
- (cond
- ;;;;; windows
-  ((string-equal "windows-nt" system-type)
-   (progn
-     (setq initial-buffer-choice (format "c:/Users/%s/OneDrive/Documentos/emacs/begin.org" user-login-name))
-     (setq package-check-signature nil)
-     ;; setting proper fonts for windows
-     (add-to-list 'default-frame-alist '(font . "Lucida Console-12"))  
-     (set-face-attribute 'default t :font "Lucida Console-12")  
-     (set-face-attribute 'default nil :font "Lucida Console-12")  
-     (set-frame-font "Lucida Console-12" nil t))) 
- ;;;;; linux
-  ((string-equal "gnu/linux" system-type)
-   (progn
-     (setq initial-buffer-choice "~/.begin.org") ;; setting proper fonts for linux 
-     (add-to-list 'default-frame-alist '(font . "Monospace-13"))  
-     (set-face-attribute 'default t :font "Monospace-13")  
-     (set-face-attribute 'default nil :font "Monospace-13")  
-     (set-frame-font "Monospace-13" nil t))))
+   (setq CURR_DESKTOP (shell-command-to-string "printenv | grep -i XDG_CURRENT_DESKTOP"))
+       ;;; check if XFCE is in XDG_CURRENT_DESKTOP
+       ;; if it is, result is a numerical value 
+       ;; otherwise, result is nil
+       ;; like so:
+   (string-match-p (regexp-quote "XFCE") CURR_DESKTOP)
+   (cond
+   ;;;;; windows
+    ((string-equal "windows-nt" system-type)
+     (progn
+       (setq initial-buffer-choice (format "c:/Users/%s/OneDrive/Documentos/emacs/begin.org" user-login-name))
+       (setq package-check-signature nil)
+       ;; setting proper fonts for windows
+       (add-to-list 'default-frame-alist '(font . "Lucida Console-12"))  
+       (set-face-attribute 'default t :font "Lucida Console-12")  
+       (set-face-attribute 'default nil :font "Lucida Console-12")  
+       (set-frame-font "Lucida Console-12" nil t))) 
+   ;;;;; linux
+    ((string-equal "gnu/linux" system-type)
+     (if (numberp (string-match-p (regexp-quote "XFCE") CURR_DESKTOP))
+	 (progn
+	   (setq initial-buffer-choice "~/.begin.org")
+	   (add-to-list 'default-frame-alist '(font . "Monospace-10"))
+	   (set-face-attribute 'default t :font "Monospace-10")
+	   (set-face-attribute 'default nil :font "Monospace-10")
+	   (set-frame-font "Monospace-10" nil t))
+       (progn
+	 (setq initial-buffer-choice "~/.begin.org")
+	 (add-to-list 'default-frame-alist '(font . "Monospace-13"))
+	 (set-face-attribute 'default t :font "Monospace-13")  
+	 (set-face-attribute 'default nil :font "Monospace-13")  
+	 (set-frame-font "Monospace-13" nil t)))))
+
 
  #+END_SRC
 
@@ -114,6 +128,9 @@
     (add-to-list 'org-file-apps '(directory . emacs))
  #+END_SRC
 
+ #+RESULTS:
+ : ((directory . emacs) (auto-mode . emacs) (\.mm\' . default) (\.x?html?\' . default) (\.pdf\' . default))
+
 *** Publish
 
     #+BEGIN_SRC emacs-lisp
@@ -131,26 +148,30 @@
 *** Agenda
 
  #+BEGIN_SRC emacs-lisp
-	(require 'org-habit)
-	(setq org-habit-graph-column 100) 
+   (require 'org-habit)
+   (setq org-habit-graph-column 100) 
 
-	(setq syncdir "/media/paulo/HDD_1/syncthing/org/")
-	(setq confdir "/home/paulo/.emacs.d/config/")
+   (setq syncdir "/media/paulo/HDD_1/syncthing/org/")
+   (setq confdir "/home/paulo/.emacs.d/config/")
 
-	(setq agenda-files (list
-			    (concat syncdir "todos.org")
-			    (concat syncdir "gcalendar.org")))
+   (setq agenda-files (list
+		       (concat syncdir "todos.org")
+		       (concat syncdir "gcalendar.org")))
+   (setq writefiles (list
+		     (concat syncdir "writing.org")
+		     (concat syncdir "journaling.org")))
 
-	(add-hook 'after-init-hook (lambda ()
-				     (progn 
-				       (org-babel-load-file (concat confdir "org-agenda-config.org"))
-				       (setq org-agenda-files agenda-files)
-				       ;;; refile
-				       (setq agenda-minus-ical (butlast org-agenda-files))
-				       (setq projetos (concat syncdir "projetos.org"))
-				       (setq org-refile-targets '((nil :maxlevel . 1)
-								  (agenda-minus-ical :maxlevel . 1)
-								  (projetos :maxlevel . 1))))))
+   (add-hook 'after-init-hook (lambda ()
+				(progn 
+				  (org-babel-load-file (concat confdir "org-agenda-config.org"))
+				  (setq org-agenda-files agenda-files)
+				  ;;; refile
+				  (setq agenda-minus-ical (butlast org-agenda-files))
+				  (setq projetos (concat syncdir "projetos.org"))
+				  (setq org-refile-targets '((nil :maxlevel . 1)
+							     (agenda-minus-ical :maxlevel . 1)
+							     (writefiles :maxlevel . 1)
+							     (projetos :maxlevel . 1))))))
  #+END_SRC
 
 *** Calendar
@@ -201,7 +222,7 @@
 	     `(("t" "Task / To-do" entry ;; próximas ações
 		(file+headline ,(concat orgdir "todos.org") "Afazeres") 
 		"* TODO %^{Description}\n%?" :empty-lines 1)
-	
+
 	       ("g" "Goal / Project" entry ;; objetivos
 		(file+headline ,(concat orgdir "projetos.org") "Capture") 
 		"* %^{Title}\n:PROPERTIES:\n:GOAL: %^{Goal|Medium|Short|Long}\n:END:\nRecorded on %t\n:SMART:\n:SPECIFIC: %^{Specific description}\n:MEASURABLE: %^{How to measure progress in that goal?\n:ACTIVITY: %^{What activity needs to be done to accomplish that goal?}\n:RESOURCES: %^{What do we need to do it? Do we already have it?}\n:TIMEBOX: %^{How much time should I give to this task, and how often?}\n:END:\n:ACTIONS:\nLinks to actions that support this goal\n:END:\n" :empty-lines 1)
@@ -211,21 +232,27 @@
 		(file+olp ,(concat orgdir "notes.org") "capture" "book notes") 
 		"* %t \n:properties:\n:livro: %^{livro}\n:pages: %^{páginas}\n:end:\n %?"
 		:empty-lines 1 :jump-to-captured t)
-	
+
+	       ("nc" "citation" entry ;;;;; anotações sobre livros
+		(file+olp ,(concat orgdir "notes.org") "capture" "quotes") 
+		"* %t \n:properties:\n:livro: %^{livro}\n:page: %^{página}\n:end:\n %?"
+		:empty-lines 1 :jump-to-captured t)
+
+
 	       ("nw" "notes about web page" entry ;; anotações sobre website
 		(file+olp ,(concat orgdir "notes.org") "capture" "web pages") 
 		      "* %t - página: %^{página}\n:properties:\nlink: %^{link}\n:end:\n %?"
 		      :empty-lines 1 :jump-to-captured t)
-	
+
 	       ("nm" "notas - miscelânia" entry ;;; anotações que não se encaixam em nenhum outro critério
 		(file+olp ,(concat orgdir "notes.org") "capture" "misc") 
 		"* %t - %^{título}\n:properties:\nrecursos: %^{recursos}\n:end:\n %?"
 		:empty-lines 1 :jump-to-captured t)
-	
+
 	       ("na" "note about an article" entry ;; anotações sobre artigos
 		(file+olp ,(concat orgdir "notes.org") "capture" "articles") 
 		"* %t %^{title} \n:properties:\n:author: %^{author}\n:year: %^{year}\n:journal: %^{journal}\n:number: %^{number}\n:volume: %^{volume}\n:pages: %^{pages}\n:address:%^{address}:end:\n%?" :empty-lines 1 :jump-to-captured t)
-	
+
 	       ("nu" "uni notes" entry ;;;; buffer para tarefas da faculdade
 		(file ,(concat orgdir "uni/uninotes.org")) 
 		"* %t - %^{title}\n%?"
@@ -235,16 +262,16 @@
 	       ("rb" "books to read" entry ;;; books
 		(file+headline ,(concat orgdir "lists.org") "capture") 
 		"* %^{book title} :book: %?\n added: %t\n:info:\n:author: %^{author}\n:end:" :empty-lines 1)
-	
+
 	       ("ra" "articles to read" entry ;;; articles
 		(file+headline ,(concat orgdir "lists.org") "capture") 
 		"* %^{article title} :article: %?\n added: %t\n:info:\n:author: %^{author}\n:link: %^{link}\n:end:" :empty-lines 1)
-	
+
 	       ("c" "Consoom")
 	       ("cm" "movies/series to watch" entry ;; movies
 		      (file+headline ,(concat orgdir "lists.org") "capture") 
 		      "* %^{movie title} %^{kind of media|:movie:|:series:|:animu:|:documentary:} %?\n added: %t" :empty-lines 1)
-	
+
 	       ("cg" "games to play" entry ;; games
 		(file+headline ,(concat orgdir "lists.org") "capture") 
 		"* %^{game title} :game: %?\n added: %t" :empty-lines 1)
@@ -254,17 +281,17 @@
 		(file+headline ,(concat orgdir "writing.org") "Capture") 
 		"* %t - %^{Title}\nnote taken on %T\n %?"
 		:empty-lines 1 :jump-to-captured t) 
-	
+
 	       ("wt" "Trabalho de conclusão de curso" entry ;; tcc/thesis
 		(file+headline ,(concat orgdir "tcc.org") "Texto de fato") 
 		"* %t - %^{Title}\nnote taken on %T\n %?"
 		:empty-lines 1 :jump-to-captured t)
-	
+
 	       ("wj" "Journal entry" entry ;; journaling
 		(file+headline ,(concat orgdir "journaling.org") "Capture") 
 		"* %t - %^{Title}\n:LOGBOOK:\n%?\n:END:"
 		:empty-lines 1 :jump-to-captured t)
-	
+
 	       ("wp" "Novo post" plain ;; blogpost 
 		(file blogpostsdir)
 		"{% extends \"base.html\" %}\n{% block title %} %^{TITLE} {% endblock %}\n{% block content %}\n {% filter markdown %}\n%?\n{% endfilter %}\n{% endblock %}\n"
@@ -302,8 +329,13 @@
     (setq TeX-view-program-selection
 	 '((output-dvi "Atril")
 	   (output-pdf "Atril")
-	   (output-html "brave-browser")))
+	   (output-html "firefox")))
     #+END_SRC
+
+    #+RESULTS:
+    | output-dvi  | Atril   |
+    | output-pdf  | Atril   |
+    | output-html | firefox |
    
 ** Hooks
    
@@ -379,14 +411,21 @@
 *** Temas
 
  #+BEGIN_SRC emacs-lisp 
-   (load "~/.emacs.d/lisp/late-night-theme.el")
-   (setq hour (string-to-number (format-time-string "%H")))
-   (cond ((and (< hour 5) (>= hour 0)) (progn  (load-theme 'almost-mono-black t)
-					       (load-theme 'late-night t)))
-	      ((and (>= hour 5) (<= hour 23)) (progn (load-theme 'doom-manegarm t)
-						     (load-theme 'almost-mono-black t)))) 
-   ;(hl-line-mode 1)
-   (set-frame-parameter (selected-frame) 'alpha '(80 . 80))
+      (setq hour (string-to-number (format-time-string "%H")))
+      (cond ((and (< hour 5) (>= hour 0)) (progn  
+					    (set-frame-parameter (selected-frame) 'alpha '(90 . 90))
+					    (load-theme 'doom-outrun-electric t)))
+	    ((and (>= hour 5) (<= hour 15)) (progn
+					       (set-frame-parameter (selected-frame) 'alpha '(100 . 100))
+					      (load-theme 'leuven t))) 
+	    ((and (>= hour 14) (<= hour 17)) (progn
+					       (set-frame-parameter (selected-frame) 'alpha '(100 . 100))
+					       (load-theme 'solarized-gruvbox-light t))) 
+	    ((and (>= hour 18) (<= hour 23)) (progn 
+					       (set-frame-parameter (selected-frame) 'alpha '(90 . 90))
+					       (load-theme 'doom-snazzy t)))) 
+   (hl-line-mode 1)
+   
 #+END_SRC
 
 *** Menus, barras etc

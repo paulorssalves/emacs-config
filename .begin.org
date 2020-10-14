@@ -7,11 +7,17 @@
   :VISIBILITY: content
   :END: 
 ** [[file://media/paulo/HDD_1/syncthing/org/todos.org][Afazeres]]
-** [[file://media/paulo/HDD_1/syncthing/org/habits.org][Tarefas Diárias]]
 ** [[file://media/paulo/HDD_1/syncthing/org/projetos.org][Projetos]]
-** [[file://media/paulo/HDD_1/syncthing/org/notes.org][Notas]] 
-** [[/media/paulo/HDD_1/syncthing/org/lists.org][Listas]] 
-** [[/media/paulo/HDD_1/syncthing/org/personalinfo.org][Informaćão Pessoal]] 
+** [[file://media/paulo/HDD_1/syncthing/org/notes.org][Notas]]
+*** [[file://media/paulo/HDD_1/syncthing/org/writing.org][Creative/productive writing]]
+**** [[./tcc.org][trabalho de conclusão de curso]]
+*** [[file://media/paulo/HDD_1/syncthing/org/journaling.org][Journaling]]
+*** [[file://media/paulo/HDD_1/syncthing/org/phonenotes.org][Phone notes]]
+*** [[file://media/paulo/HDD_1/syncthing/org/refs.org][Referências]]
+**** [[/media/paulo/HDD_1/syncthing/org/lists.org][Listas]] 
+** [[/media/paulo/HDD_1/syncthing/org/personalinfo.org][Informação Pessoal]]
+** [[file://media/paulo/HDD_1/syncthing/org/phonenotes.org][Phonenotes]]
+
 
 * Configurações 
   :PROPERTIES:
@@ -27,7 +33,8 @@
   :END:
 ** [[file://media/paulo/HDD_CREATIVE_FILES/src][src]]
 ** [[file://home/paulo/Documents/RPGs][RPGs]]
+** [[file://media/paulo/HDD_1/syncthing/english][English]]
 ** [[file://home/paulo/Documents/Ingles/CNA][CNA]]
-** [[file://home/paulo/Documents/academics][Faculdade]]
+** [[file://home/paulo/docs/psi][faculdade]]
 ** [[file://media/paulo/HDD_1/syncthing/org][org-folder]]
 ** [[file://~/][homedir~]] 
